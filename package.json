@@ -1,7 +1,7 @@
 {
-  "name": "phaser3-typescript-template",
-  "version": "1.0.1",
-  "description": "A Phaser 3 TypeScript Template",
+  "name": "hz-bewust-online-game",
+  "version": "1.0.0",
+  "description": "https://dannylifino.github.io/hz-bewust-online-game/",
   "scripts": {
     "build:dev": "webpack --env dev",
     "build:prod": "webpack --env prod",
@@ -10,28 +10,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wtravO/phaser3-typescript-template.git"
+    "url": "https://github.com/dannylifino/hz-bewust-online-game.git"
   },
-  "author": "Travis O'Neal",
+  "author": "Danny Lifino",
   "license": "MIT",
   "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
   "bugs": {
-    "url": "https://github.com/wtravO/phaser3-typescript-template/issues"
+    "url": "https://github.com/dannylifino/hz-bewust-online-game/issues"
   },
   "devDependencies": {
-    "@types/node": "^10.12.2",
-    "@types/webpack": "^4.4.17",
+    "@types/node": "^10.17.8",
+    "@types/webpack": "^4.41.0",
     "raw-loader": "^0.5.1",
-    "ts-loader": "^5.3.0",
+    "ts-loader": "^5.4.5",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.6",
-    "webpack": "^4.24.0",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+    "typescript": "^3.7.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
     "copy-webpack-plugin": "^4.6.0",
     "html-webpack-plugin": "^3.2.0",
-    "phaser": "^3.15.1"
+    "phaser": "^3.21.0"
   }
 }
