@@ -1,6 +1,7 @@
 import "phaser";
 import { Preloader } from './scenes/Preloader';
 import { TitleScene } from './scenes/TitleScene';
+import { Game } from "./models/Game";
 // import { Game } from "./models/Game";
 
 
