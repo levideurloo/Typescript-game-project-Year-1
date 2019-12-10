@@ -1,7 +1,9 @@
 import "phaser";
 import { Preloader } from './scenes/Preloader';
 import { TitleScene } from './scenes/TitleScene';
-    
+// import { Game } from "./models/Game";
+
+
 const config: GameConfig = {
     type: Phaser.AUTO,
     parent: "canvas",
@@ -10,7 +12,7 @@ const config: GameConfig = {
     scene: [
         Preloader,
         TitleScene,
-    ]
+    ],
 };
 
-const game = new Phaser.Game(config);
+const game = new Game(config);
