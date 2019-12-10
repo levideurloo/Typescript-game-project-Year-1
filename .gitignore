@@ -52,10 +52,13 @@ typings/
 *.tgz
 
 # Yarn Integrity file
-.yarn-integrity
+.yarn-integritys
 
 # dotenv environment variables file
 .env
 
 # next.js build output
 .next
+
+# VSCode configuration
+.vscode/
