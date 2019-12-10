@@ -2,6 +2,8 @@ import { Game } from "../models/Game";
 
 export class TitleScene extends Phaser.Scene {
 
+    private selectedCharacterText: Phaser.GameObjects.Text | undefined;
+
     constructor() {
         super({
             key: 'main',
@@ -43,8 +45,15 @@ export class TitleScene extends Phaser.Scene {
         // Add next button image
         const nextBtn = this.add.image(this.game.canvas.width / 2, this.game.canvas.height * 0.9, 'next').setScale(0.2);
 
+        //Add pointer down listener
         nextBtn.setInteractive().on('pointerdown', () => {
             alert("clicked");
+
+            //check if a character is selected
+            if (!(this.game as Game).characterInfo) {
+                alert("Selecteer eerst een speler!");
+                return false;
+            }
         });
     }
 
@@ -60,8 +69,22 @@ export class TitleScene extends Phaser.Scene {
         //Add pointer down listener
         [boyCharacter, girlCharacter].forEach(function (element) {
             element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
-                (this.scene.game as Game).character = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.jpg` };
+
+                //destroy text
+                const selectedCharacterText = (this.scene as TitleScene).selectedCharacterText;
+
+                if (selectedCharacterText) {
+                    selectedCharacterText.destroy();
+                }
+
+                //set game property
+                (this.scene.game as Game).characterInfo = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.jpg` };
+
+                //set selected text
+                (this.scene as TitleScene).selectedCharacterText = this.scene.add.text(this.x - this.displayWidth / 2, (this.y + this.displayHeight) + 20, "Geselecteerd").setColor("white");
+
             });
         }, this);
+
     }
 }

@@ -1,4 +1,4 @@
-export interface ICharacter {
+export interface ICharacterInfo {
 
     name: string;
     spreadsheetUri: string;

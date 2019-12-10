@@ -1,10 +1,10 @@
-import { ICharacter } from "../interfaces/ICharacter";
+import { ICharacterInfo } from "../interfaces/ICharacterInfo";
 
 export class Game extends Phaser.Game {
 
     /**
      * Selected character of the game.
      */
-    character: ICharacter | undefined;
+    characterInfo: ICharacterInfo | undefined;
 
 }
