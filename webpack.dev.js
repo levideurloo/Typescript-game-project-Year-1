@@ -57,11 +57,6 @@ module.exports = {
                 from: './assets',
                 to: './assets',
                 force: true
-            },
-            {
-                from: './app.css',
-                to: './app.css',
-                force: true
             }
         ]),
         new HtmlWebpackPlugin({
