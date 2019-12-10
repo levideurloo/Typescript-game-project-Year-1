@@ -1,4 +1,4 @@
-import "phaser";
+import * as Phaser from "phaser";
 import { Preloader } from './scenes/Preloader';
 import { Main } from './scenes/Main';
 import { GameScene } from './scenes/GameScene';
@@ -12,7 +12,13 @@ const config: GameConfig = {
         Preloader,
         Main,
         GameScene
-    ]
+    ],
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false,
+        },
+    }
 };
 
 const game = new Phaser.Game(config);
