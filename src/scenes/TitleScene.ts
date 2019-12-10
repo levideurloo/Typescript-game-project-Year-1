@@ -62,13 +62,11 @@ export class TitleScene extends Phaser.Scene {
         const boyCharacter = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy').setScale(0.2).setName("boy");
         const girlCharacter = this.add.image(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, 'girl').setScale(0.2).setName("girl");
 
-
-        //Add click listener
+        //Add pointer down listener
         [boyCharacter, girlCharacter].forEach(function (element) {
-            element.setInteractive().on('pointerdown', function () { //120 / 200
-                // (this.game as Game).character = { name: boyCharacter.name, spreadsheetUri: `./assets/spritesheets/${boyCharacter.name}.jpg` };
-
+            element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
+                (this.scene.game as Game).character = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.jpg` };
             });
-        });
+        }, this);
     }
 }
