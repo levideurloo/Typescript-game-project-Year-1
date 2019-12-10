@@ -2,11 +2,6 @@ import { Game } from "../models/Game";
 
 export class TitleScene extends Phaser.Scene {
 
-    /**
-     * Selected character of the scene.
-     */
-    private selectedCharacterImage: Phaser.GameObjects.Image | undefined;
-
     constructor() {
         super({
             key: 'main',
@@ -22,20 +17,20 @@ export class TitleScene extends Phaser.Scene {
     }
 
     create() {
-        this.initMusic();
-        this.initTitle();
-        this.initCharacters();
-        this.initNextBtn();
+        this.loadMusic();
+        this.loadTitle();
+        this.loadCharacters();
+        this.loadNextBtn();
     }
 
-    private initTitle() {
+    private loadTitle() {
         const title = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 5, 'title');
     }
 
     /**
      * Play music by default
      */
-    private initMusic() {
+    private loadMusic() {
         const music = this.sound.add('DOG');
         music.play();
     }
@@ -43,7 +38,7 @@ export class TitleScene extends Phaser.Scene {
     /**
      * Add next button to screen
      */
-    private initNextBtn() {
+    private loadNextBtn() {
 
         // Add next button image
         const nextBtn = this.add.image(this.game.canvas.width / 2, this.game.canvas.height * 0.9, 'next').setScale(0.2);
@@ -56,7 +51,7 @@ export class TitleScene extends Phaser.Scene {
     /**
      * Add characters to screen
      */
-    private initCharacters() {
+    private loadCharacters() {
 
         //Add characters
         const boyCharacter = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy').setScale(0.2).setName("boy");
