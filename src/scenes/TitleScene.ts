@@ -54,6 +54,8 @@ export class TitleScene extends Phaser.Scene {
                 alert("Selecteer eerst een speler!");
                 return false;
             }
+
+            alert("Klaar om te spelen!");
         });
     }
 
