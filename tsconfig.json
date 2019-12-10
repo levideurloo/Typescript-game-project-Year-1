@@ -1,17 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "removeComments": true,
-        "out": "build/app.js",
+        "target": "es5",
+        "moduleResolution": "node",
+        "module": "CommonJS",
+        "strict": true,
+        "sourceMap": true
     },
     "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "./src/**/*"
     ]
 }
