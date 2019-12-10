@@ -1,6 +1,7 @@
 import "phaser";
 import { Preloader } from './scenes/Preloader';
 import { Main } from './scenes/Main';
+import { GameScene } from './scenes/GameScene';
 
 const config: GameConfig = {
     type: Phaser.AUTO,
@@ -9,7 +10,8 @@ const config: GameConfig = {
     height: 540,
     scene: [
         Preloader,
-        Main
+        Main,
+        GameScene
     ]
 };
 
