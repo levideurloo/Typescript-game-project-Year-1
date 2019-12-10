@@ -47,7 +47,6 @@ export class TitleScene extends Phaser.Scene {
 
         //Add pointer down listener
         nextBtn.setInteractive().on('pointerdown', () => {
-            alert("clicked");
 
             //check if a character is selected
             if (!(this.game as Game).characterInfo) {
