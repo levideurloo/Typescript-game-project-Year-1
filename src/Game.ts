@@ -1,7 +1,7 @@
 import "phaser";
 import { Preloader } from './scenes/Preloader';
 import { Main } from './scenes/Main';
-    
+
 const config: GameConfig = {
     type: Phaser.AUTO,
     parent: "canvas",
