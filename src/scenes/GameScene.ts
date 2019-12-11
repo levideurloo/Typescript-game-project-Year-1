@@ -6,6 +6,7 @@ export class GameScene extends Phaser.Scene {
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private cursorKeys: any;
     private map: any;
+    private mother: any;
 
     constructor() {
         super({ key: 'gamescene' });
@@ -22,6 +23,9 @@ export class GameScene extends Phaser.Scene {
         if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
+
+        // load mother character
+        this.load.spritesheet('mother', './assets/spritesheets/mother.png', { frameWidth: 64, frameHeight: 64 });
     }
 
     create() {
@@ -37,7 +41,7 @@ export class GameScene extends Phaser.Scene {
         this.map.displayWidth = 2500;
         this.map.displayHeight = this.game.canvas.height;
 
-        // Set physics bounds
+        // Set world bounds
         this.physics.world.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight, true, true, true, true);
 
         // Add character to the scene
@@ -45,22 +49,32 @@ export class GameScene extends Phaser.Scene {
         this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
+        // Makes the character collide with world bounds
         this.char.body.setCollideWorldBounds(true);
         this.char.body.onWorldBounds = true;
 
+
         this.physics.add.existing(this.char);
+
+        // Animates the idle state of the character
         this.anims.create({
             key: 'idle',
             repeat: -1,
             frameRate: 1,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 0 })
         });
+
+        // Animates the walking state of the character
         this.anims.create({
             key: 'walk',
             repeat: -1,
             frameRate: 12,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
+
+        // Add mother character to the scene
+        this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
+        this.physics.world.enableBody(this.mother);
 
     }
 
