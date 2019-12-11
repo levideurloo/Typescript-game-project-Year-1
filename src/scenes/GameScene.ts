@@ -4,6 +4,7 @@ import { ICharacterInfo } from "../interfaces/ICharacterInfo";
 export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
+    private phone: any;
     private cursorKeys: any;
     private map: any;
 
@@ -62,6 +63,8 @@ export class GameScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
+        // Load the in-game phone
+        this.loadPhone();
     }
 
     update() {
@@ -85,7 +88,6 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.char);
     }
 
-
     /**
      * Function which displays a notification by playing a sound and showing a message.
      */
@@ -97,5 +99,23 @@ export class GameScene extends Phaser.Scene {
 
         // display message
         alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
+    }
+
+    /**
+     * Load the phone (on start)
+     */
+    private loadPhone() {
+        this.phone = this.add.sprite(0, this.map.displayHeight, 'phone', 0);
+        this.phone.scaleX = .42;
+        this.phone.scaleY = .42;
+        this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
+        this.cameras.main.startFollow(this.phone);
+    }
+
+    /**
+     * Let the phone appear on the screen
+     */
+    private showPhone() {
+
     }
 }

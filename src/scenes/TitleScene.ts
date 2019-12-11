@@ -19,11 +19,11 @@ export class TitleScene extends Phaser.Scene {
         });
     }
 
-    preload() {
+    public preload() {
         this.loadMusic();
     }
 
-    create() {
+    public create() {
         this.loadTitle();
         this.loadCharacters();
         this.loadNextBtn();
