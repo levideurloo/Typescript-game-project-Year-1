@@ -41,7 +41,7 @@ export class GameScene extends Phaser.Scene {
         this.physics.world.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight, true, true, true, true);
 
         // Add character to the scene
-        this.char = this.add.sprite(this.game.canvas.width / 2, 485, characterName, 0);
+        this.char = this.add.sprite(-600, 485, characterName, 0);
         this.physics.world.enableBody(this.char);
 
         this.char.body.setCollideWorldBounds(true);
