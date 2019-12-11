@@ -43,7 +43,7 @@ export class Preloader extends Phaser.Scene {
 
     create() {
         this.load.spritesheet('boy', './assets/spritesheets/boy.png', { frameWidth: 120, frameHeight: 200 });
-        this.scene.start('gamescene');
+        this.scene.start('main');
         
     }
 

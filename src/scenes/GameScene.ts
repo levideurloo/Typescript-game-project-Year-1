@@ -1,3 +1,6 @@
+import { Game } from "../models/Game";
+import { ICharacterInfo } from "../interfaces/ICharacterInfo";
+
 export class GameScene extends Phaser.Scene {
 
     private char: any & { body: Phaser.Physics.Arcade.Body };
@@ -6,23 +9,30 @@ export class GameScene extends Phaser.Scene {
 
 
     constructor() {
-        super('gamescene');
+        super({ key: 'gamescene' });
     }
 
     preload() {
+
         //load in the map
         this.load.image('map', './assets/images/map.png');
 
-        //load spritesheet for male character
-        this.load.spritesheet('boy', './assets/spritesheets/boy.png', { frameWidth: 64, frameHeight: 64 });
+        const info = (this.game as Game).characterInfo;
 
-        //load spritesheet for female character
-        //this.load.spritesheet('girl', './assets/spritesheets/girl.png', { frameWidth: 64, frameHeight: 64 });
-
+        //load character 
+        if (info) {
+            this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
+        }
 
     }
 
     create() {
+
+        //get game info
+        const info = (this.game as Game).characterInfo;
+
+        //get character name, by default boy if none is selected
+        const characterName = info ? info.name : 'boy';
 
         // Add map to the scene
         this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map")
@@ -31,19 +41,19 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.existing(this.map);
 
         // Add character to the scene
-        this.char = this.add.sprite(this.game.canvas.width / 2, 485, "boy", 0)
+        this.char = this.add.sprite(this.game.canvas.width / 2, 485, characterName, 0)
         this.physics.add.existing(this.char);
         this.anims.create({
             key: 'idle',
             repeat: -1,
             frameRate: 1,
-            frames: this.anims.generateFrameNumbers('boy', { start: 0, end: 0 })
+            frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 0 })
         });
         this.anims.create({
             key: 'walk',
             repeat: -1,
             frameRate: 12,
-            frames: this.anims.generateFrameNumbers('boy', { start: 0, end: 8 })
+            frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
     }

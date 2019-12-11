@@ -1,7 +1,9 @@
 import * as Phaser from "phaser";
 import { Preloader } from './scenes/Preloader';
-import { Main } from './scenes/Main';
 import { GameScene } from './scenes/GameScene';
+import { Game } from "./models/Game";
+import { TitleScene } from './scenes/TitleScene';
+
 
 const config: GameConfig = {
     type: Phaser.AUTO,
@@ -10,15 +12,15 @@ const config: GameConfig = {
     height: 540,
     scene: [
         Preloader,
-        Main,
-        GameScene
+        GameScene,
+        TitleScene,
     ],
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false,
         },
+            debug: false,
     }
 };
 
-const game = new Phaser.Game(config);
+const game = new Game(config);
