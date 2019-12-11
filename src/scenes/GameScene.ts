@@ -7,7 +7,6 @@ export class GameScene extends Phaser.Scene {
     private cursorKeys: any;
     private map: any;
 
-
     constructor() {
         super({ key: 'gamescene' });
     }
@@ -86,12 +85,13 @@ export class GameScene extends Phaser.Scene {
     /**
      * Function which displays a notification by playing a sound and showing a message.
      */
-    private displayNotification() {
+    private notify() {
+
+        // play sound
+        const notificationSound = this.sound.add('NOTIFICATION');
+        notificationSound.play();
 
         // display message
         alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
-
-        // play sound
-
     }
 }
