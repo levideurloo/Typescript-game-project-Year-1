@@ -42,6 +42,7 @@ export class GameScene extends Phaser.Scene {
 
         // Add character to the scene
         this.char = this.add.sprite(-600, 485, characterName, 0);
+        this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
         this.char.body.setCollideWorldBounds(true);
