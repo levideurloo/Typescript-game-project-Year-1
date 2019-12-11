@@ -81,4 +81,17 @@ export class GameScene extends Phaser.Scene {
             this.map.body.setVelocityX(0); // move the background to the left
         }
     }
+
+
+    /**
+     * Function which displays a notification by playing a sound and showing a message.
+     */
+    private displayNotification() {
+
+        // display message
+        alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
+
+        // play sound
+
+    }
 }

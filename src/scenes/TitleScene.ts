@@ -3,6 +3,7 @@ import { Game } from "../models/Game";
 export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
+    private music: Phaser.Sound.BaseSound | undefined;
 
     constructor() {
         super({
@@ -18,8 +19,11 @@ export class TitleScene extends Phaser.Scene {
         });
     }
 
-    create() {
+    preload() {
         this.loadMusic();
+    }
+
+    create() {
         this.loadTitle();
         this.loadCharacters();
         this.loadNextBtn();
@@ -30,11 +34,20 @@ export class TitleScene extends Phaser.Scene {
     }
 
     /**
-     * Play music by default
+     * Load music function
      */
     private loadMusic() {
-        const music = this.sound.add('DOG');
-        music.play();
+        this.music = this.sound.add('DOG');
+        this.music.play();
+    }
+
+    /**
+    * Stop music
+    */
+    private stopMusic() {
+        if (this.music) {
+            this.music.stop();
+        }
     }
 
     /**
@@ -54,6 +67,7 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
+            this.stopMusic();
             this.scene.start("gamescene");
         });
     }
