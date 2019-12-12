@@ -32,13 +32,15 @@ export class GameScene extends Phaser.Scene {
 
         const info = (this.game as Game).characterInfo;
 
+
         //load character 
-        if (info)
+        if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
 
         // load mother character
         this.load.spritesheet('mother', './assets/spritesheets/mother.png', { frameWidth: 64, frameHeight: 64 });
+
     }
 
     create() {
@@ -110,7 +112,7 @@ export class GameScene extends Phaser.Scene {
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
             this.showPhone();
-            
+
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
@@ -135,20 +137,6 @@ export class GameScene extends Phaser.Scene {
         }, 10000);
 
     }
-
-    // /**
-    //  * Load the phone (on start)
-    //  */
-    // private loadPhone() {
-
-
-
-    //     // this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
-    //     // this.cameras.main.startFollow(this.phone);
-
-    //     // this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    //     // this.spaceBar = this.input.keyboard. addKey('SPACE'); 
-    // }
 
     /**
      * Let the phone appear on the screen
