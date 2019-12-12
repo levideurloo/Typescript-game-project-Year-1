@@ -14,16 +14,22 @@ export class Phone {
 		this.sprite.scaleY = scaleY;
 	}
 
+	public getSprite() {
+		return this.sprite;
+	}
+	
 	public togglePhone(displayHeight: number) {
 		if (this.sprite) {
 			if (this.isToggled) {
 				this.sprite.y = (displayHeight + 250);
 				this.isToggled = false;
 			} else {
-				this.sprite.y = (displayHeight - 175); 
+				this.sprite.y = (displayHeight - 175);
 				this.isToggled = true;
 			}
 		}
 	}
+
+
 
 }

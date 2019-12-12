@@ -23,7 +23,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload() {
-
         //load in the map
         this.load.image('map', './assets/images/map.png');
         this.load.image('mother-textbubble', './assets/images/mother-textbubble.gif');
@@ -73,7 +72,7 @@ export class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'idle',
             repeat: -1,
-            frameRate: 1,
+            frameRate: 1,  
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 0 })
         });
 
@@ -86,7 +85,10 @@ export class GameScene extends Phaser.Scene {
         });
 
         // Create the in-game phone
-        this.phone.addSprite(this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0), .38, .38);
+        const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
+        phoneSprite.setDepth(1);
+        
+        this.phone.addSprite(phoneSprite, .38, .38);
         this.loadMother();
     }
 
@@ -95,12 +97,12 @@ export class GameScene extends Phaser.Scene {
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(50); // move left with 85 speed
+            this.char.body.setVelocityX(75); // move right with 50 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-50) // move right with 85 speed
+            this.char.body.setVelocityX(-75) // move left with 50 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -110,7 +112,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationMother)
             this.showPhone();
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
@@ -118,6 +120,13 @@ export class GameScene extends Phaser.Scene {
 
         this.onCollideMother();
         this.receiveNotificationMother();
+
+        const phoneSprite = this.phone.getSprite();
+
+        if (phoneSprite)
+            phoneSprite.setX(this.char.body.x + 385); 
+        
+
     }
 
     /**
