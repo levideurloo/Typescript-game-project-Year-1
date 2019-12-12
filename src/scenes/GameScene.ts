@@ -9,9 +9,11 @@ export class GameScene extends Phaser.Scene {
     private mother: any;
 
     /**
-     * Boolean to check 
+     * Boolean to check MOTHER
      */
-    private motherScenarioPlayed: boolean = false;
+    private hasPassedMother: boolean = false;
+    private hasReceivedNotificationMother: boolean = false;
+
 
     constructor() {
         super({ key: 'gamescene' });
@@ -22,6 +24,8 @@ export class GameScene extends Phaser.Scene {
         //load in the map
         this.load.image('map', './assets/images/map.png');
         this.load.image('mother-textbubble', './assets/images/mother-textbubble.gif');
+        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+
 
         const info = (this.game as Game).characterInfo;
 
@@ -101,6 +105,7 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.char);
 
         this.onCollideMother();
+        this.receiveNotificationMother();
     }
 
 
@@ -114,7 +119,7 @@ export class GameScene extends Phaser.Scene {
         notificationSound.play();
 
         // display message
-        alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
+        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
     }
 
     /**
@@ -133,21 +138,27 @@ export class GameScene extends Phaser.Scene {
 
         //get x from characters
         const playerX = this.char.body.x;
-
-        const motherX = this.mother.body.x
         const motherY = this.mother.body.y;
-        const motherHeight = this.mother.body.displayHeight;
+        const motherX = this.mother.body.x
+
 
         //is player in reach && scenario not played yet
-        if (!this.motherScenarioPlayed && playerX + 30 > motherX) {
+        if (!this.hasPassedMother && playerX + 30 > motherX) {
 
-            this.motherScenarioPlayed = true;
-
-            //stop movement player
-            this.char.body.moves = false;
-
+            this.hasPassedMother = true;
             const textBubble = this.add.image(motherX + 100, motherY - 50, "mother-textbubble")
+        }
+    }
 
+    private receiveNotificationMother() {
+
+        const playerX = this.char.body.x;
+        const motherX = this.mother.body.x
+        const notificaitonX = motherX + 780;
+
+        if (!this.hasReceivedNotificationMother && playerX > notificaitonX) {
+            this.hasReceivedNotificationMother = true;
+            this.notify();
         }
     }
 
