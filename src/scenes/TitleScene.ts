@@ -38,7 +38,7 @@ export class TitleScene extends Phaser.Scene {
      */
     private loadMusic() {
         this.music = this.sound.add('DOG');
-        // this.music.play();
+        this.music.play();
     }
 
     /**
