@@ -1,6 +1,5 @@
 
 export class Phone {
-
 	private isToggled: boolean = false;
 	private sprite: Phaser.GameObjects.Sprite | undefined;
 
@@ -30,6 +29,8 @@ export class Phone {
 		}
 	}
 
-
+	public getToggledState() {
+		return this.isToggled;
+	}
 
 }

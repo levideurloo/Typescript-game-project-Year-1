@@ -72,7 +72,7 @@ export class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'idle',
             repeat: -1,
-            frameRate: 1,  
+            frameRate: 1,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 0 })
         });
 
@@ -87,7 +87,7 @@ export class GameScene extends Phaser.Scene {
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
         phoneSprite.setDepth(1);
-        
+
         this.phone.addSprite(phoneSprite, .38, .38);
         this.loadMother();
     }
@@ -97,12 +97,12 @@ export class GameScene extends Phaser.Scene {
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(75); // move right with 50 speed
+            this.char.body.setVelocityX(75); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-75) // move left with 50 speed
+            this.char.body.setVelocityX(-75) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -113,7 +113,7 @@ export class GameScene extends Phaser.Scene {
 
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationMother)
-            this.showPhone();
+            this.togglePhone();
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
@@ -124,9 +124,9 @@ export class GameScene extends Phaser.Scene {
         const phoneSprite = this.phone.getSprite();
 
         if (phoneSprite)
-            phoneSprite.setX(this.char.body.x + 385); 
-        
+            phoneSprite.setX(this.char.body.x + 385);
 
+        this.boundPhone();
     }
 
     /**
@@ -150,10 +150,19 @@ export class GameScene extends Phaser.Scene {
     /**
      * Let the phone appear on the screen
      */
-    private showPhone() {
+    private togglePhone() {
         if (this.phone)
             this.phone.togglePhone(this.map.displayHeight);
     }
+
+    /**
+     * Let the phone appear on the screen
+     */
+    private boundPhone() {
+        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
+            this.phone.togglePhone(this.map.displayHeight);
+    }
+
 
     /**
      * Loads the mother 
