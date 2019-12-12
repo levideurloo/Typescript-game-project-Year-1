@@ -1,15 +1,17 @@
+import { Phone } from './../models/Phone';
 import { Game } from "../models/Game";
-import { ICharacterInfo } from "../interfaces/ICharacterInfo";
 
 export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
-    private phone: any;
+    private phone: Phone;
     private cursorKeys: any;
+    private spaceBar: any;
     private map: any;
 
     constructor() {
         super({ key: 'gamescene' });
+        this.phone = new Phone();
     }
 
     preload() {
@@ -20,13 +22,11 @@ export class GameScene extends Phaser.Scene {
         const info = (this.game as Game).characterInfo;
 
         //load character 
-        if (info) {
+        if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        }
     }
 
     create() {
-
         //get game info
         const info = (this.game as Game).characterInfo;
 
@@ -63,12 +63,13 @@ export class GameScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
-        // Load the in-game phone
-        this.loadPhone();
+        // Create the in-game phone
+        this.phone.addSprite(this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0), .38, .38);
     }
 
     update() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
+        this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
             this.char.body.setVelocityX(50); // move left with 85 speed
@@ -84,6 +85,11 @@ export class GameScene extends Phaser.Scene {
             this.char.body.setVelocityX(0);
             this.char.anims.play('idle', true); // plays the idle animtaion when no keys are pressed
         }
+
+        // Using the JustDown function to prevent infinity repeat
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
+            this.showPhone();
+            
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
     }
@@ -101,21 +107,25 @@ export class GameScene extends Phaser.Scene {
         alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
     }
 
-    /**
-     * Load the phone (on start)
-     */
-    private loadPhone() {
-        this.phone = this.add.sprite(0, this.map.displayHeight, 'phone', 0);
-        this.phone.scaleX = .42;
-        this.phone.scaleY = .42;
-        this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
-        this.cameras.main.startFollow(this.phone);
-    }
+    // /**
+    //  * Load the phone (on start)
+    //  */
+    // private loadPhone() {
+
+
+
+    //     // this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
+    //     // this.cameras.main.startFollow(this.phone);
+
+    //     // this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    //     // this.spaceBar = this.input.keyboard. addKey('SPACE'); 
+    // }
 
     /**
      * Let the phone appear on the screen
      */
     private showPhone() {
-
+        if (this.phone)
+            this.phone.togglePhone(this.map.displayHeight);
     }
 }
