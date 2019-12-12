@@ -12,18 +12,18 @@ export class TitleScene extends Phaser.Scene {
                 files: [
                     { type: 'image', key: 'title-button', url: './assets/images/game-title.png' },
                     { type: 'image', key: 'next-button', url: './assets/images/next-button.jpg' },
-                    { type: 'image', key: 'boy-image', url: './assets/images/boy-img.jpg' },
-                    { type: 'image', key: 'girl-image', url: './assets/images/girl-img.jpg' },
+                    { type: 'image', key: 'boy-image', url: './assets/images/boy-img.png' },
+                    { type: 'image', key: 'girl-image', url: './assets/images/girl-img.png' },
                 ]
             }
         });
     }
 
-    preload() {
+    public preload() {
         this.loadMusic();
     }
 
-    create() {
+    public create() {
         this.loadTitle();
         this.loadCharacters();
         this.loadNextBtn();
