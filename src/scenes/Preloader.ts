@@ -42,9 +42,8 @@ export class Preloader extends Phaser.Scene {
         this.loadAudio();
     }
 
-    public create() {
-        this.load.spritesheet('boy', './assets/spritesheets/boy.png', { frameWidth: 120, frameHeight: 200 });
-        this.scene.start('main'); 
+    create() {
+        this.scene.start('main');
     }
 
     private loadAtlas() {

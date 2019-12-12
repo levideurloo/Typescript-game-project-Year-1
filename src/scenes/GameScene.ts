@@ -8,6 +8,14 @@ export class GameScene extends Phaser.Scene {
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
+    private mother: any;
+
+    /**
+     * Boolean to check MOTHER
+     */
+    private hasPassedMother: boolean = false;
+    private hasReceivedNotificationMother: boolean = false;
+
 
     constructor() {
         super({ key: 'gamescene' });
@@ -18,12 +26,19 @@ export class GameScene extends Phaser.Scene {
 
         //load in the map
         this.load.image('map', './assets/images/map.png');
+        this.load.image('mother-textbubble', './assets/images/mother-textbubble.gif');
+        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+
 
         const info = (this.game as Game).characterInfo;
 
         //load character 
         if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
+        }
+
+        // load mother character
+        this.load.spritesheet('mother', './assets/spritesheets/mother.png', { frameWidth: 64, frameHeight: 64 });
     }
 
     create() {
@@ -38,7 +53,7 @@ export class GameScene extends Phaser.Scene {
         this.map.displayWidth = 2500;
         this.map.displayHeight = this.game.canvas.height;
 
-        // Set physics bounds
+        // Set world bounds
         this.physics.world.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight, true, true, true, true);
 
         // Add character to the scene
@@ -46,16 +61,21 @@ export class GameScene extends Phaser.Scene {
         this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
+        // Makes the character collide with world bounds
         this.char.body.setCollideWorldBounds(true);
         this.char.body.onWorldBounds = true;
 
         this.physics.add.existing(this.char);
+
+        // Animates the idle state of the character
         this.anims.create({
             key: 'idle',
             repeat: -1,
             frameRate: 1,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 0 })
         });
+
+        // Animates the walking state of the character
         this.anims.create({
             key: 'walk',
             repeat: -1,
@@ -65,6 +85,7 @@ export class GameScene extends Phaser.Scene {
 
         // Create the in-game phone
         this.phone.addSprite(this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0), .38, .38);
+        this.loadMother();
     }
 
     update() {
@@ -92,6 +113,9 @@ export class GameScene extends Phaser.Scene {
             
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
+
+        this.onCollideMother();
+        this.receiveNotificationMother();
     }
 
     /**
@@ -104,7 +128,12 @@ export class GameScene extends Phaser.Scene {
         notificationSound.play();
 
         // display message
-        alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
+        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+
+        setTimeout(function () {
+            textBubble.destroy();
+        }, 10000);
+
     }
 
     // /**
@@ -128,4 +157,49 @@ export class GameScene extends Phaser.Scene {
         if (this.phone)
             this.phone.togglePhone(this.map.displayHeight);
     }
+
+    /**
+     * Loads the mother 
+     */
+    private loadMother() {
+
+        // Add mother character to the scene
+        this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
+
+        this.physics.world.enableBody(this.mother);
+        this.physics.add.existing(this.mother);
+    }
+
+    private onCollideMother() {
+
+        //get x from characters
+        const playerX = this.char.body.x;
+        const motherY = this.mother.body.y;
+        const motherX = this.mother.body.x
+
+
+        //is player in reach && scenario not played yet
+        if (!this.hasPassedMother && playerX + 30 > motherX) {
+
+            this.hasPassedMother = true;
+            const textBubble = this.add.image(motherX + 100, motherY - 50, "mother-textbubble")
+
+            setTimeout(function () {
+                textBubble.destroy();
+            }, 10000);
+        }
+    }
+
+    private receiveNotificationMother() {
+
+        const playerX = this.char.body.x;
+        const motherX = this.mother.body.x
+        const notificaitonX = motherX + 780;
+
+        if (!this.hasReceivedNotificationMother && playerX > notificaitonX) {
+            this.hasReceivedNotificationMother = true;
+            this.notify();
+        }
+    }
+
 }
