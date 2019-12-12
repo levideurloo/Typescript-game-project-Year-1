@@ -120,6 +120,11 @@ export class GameScene extends Phaser.Scene {
 
         // display message
         const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+
+        setTimeout(function () {
+            textBubble.destroy();
+        }, 10000);
+
     }
 
     /**
@@ -147,6 +152,10 @@ export class GameScene extends Phaser.Scene {
 
             this.hasPassedMother = true;
             const textBubble = this.add.image(motherX + 100, motherY - 50, "mother-textbubble")
+
+            setTimeout(function () {
+                textBubble.destroy();
+            }, 10000);
         }
     }
 
