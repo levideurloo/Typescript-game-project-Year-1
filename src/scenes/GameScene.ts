@@ -53,7 +53,6 @@ export class GameScene extends Phaser.Scene {
         this.char.body.setCollideWorldBounds(true);
         this.char.body.onWorldBounds = true;
 
-
         this.physics.add.existing(this.char);
 
         // Animates the idle state of the character
@@ -72,10 +71,7 @@ export class GameScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
-        // Add mother character to the scene
-        this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
-        this.physics.world.enableBody(this.mother);
-
+        this.loadMother();
     }
 
     update() {
@@ -97,6 +93,8 @@ export class GameScene extends Phaser.Scene {
         }
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
+
+        this.onCollideMother();
     }
 
 
@@ -111,5 +109,28 @@ export class GameScene extends Phaser.Scene {
 
         // display message
         alert("Hey! Je hebt een whatsapp'je ontvangen. Open de telefoon via de spacebar.");
+    }
+
+    /**
+     * Loads the mother 
+     */
+    private loadMother() {
+
+        // Add mother character to the scene
+        this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
+       
+        this.physics.world.enableBody(this.mother);
+        this.physics.add.existing(this.mother);
+    }
+
+    private onCollideMother() {
+
+        //get x from characters
+        const playerX = this.char.body.x;
+        const motherX = this.mother.body.x
+
+        if (playerX + 30 > motherX) {
+            console.log("in reach");
+        }
     }
 }
