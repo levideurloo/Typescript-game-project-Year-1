@@ -8,6 +8,11 @@ export class GameScene extends Phaser.Scene {
     private map: any;
     private mother: any;
 
+    /**
+     * Boolean to check 
+     */
+    private motherScenarioPlayed: boolean = false;
+
     constructor() {
         super({ key: 'gamescene' });
     }
@@ -16,6 +21,7 @@ export class GameScene extends Phaser.Scene {
 
         //load in the map
         this.load.image('map', './assets/images/map.png');
+        this.load.image('mother-textbubble', './assets/images/mother-textbubble.gif');
 
         const info = (this.game as Game).characterInfo;
 
@@ -118,7 +124,7 @@ export class GameScene extends Phaser.Scene {
 
         // Add mother character to the scene
         this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
-       
+
         this.physics.world.enableBody(this.mother);
         this.physics.add.existing(this.mother);
     }
@@ -127,10 +133,22 @@ export class GameScene extends Phaser.Scene {
 
         //get x from characters
         const playerX = this.char.body.x;
-        const motherX = this.mother.body.x
 
-        if (playerX + 30 > motherX) {
-            console.log("in reach");
+        const motherX = this.mother.body.x
+        const motherY = this.mother.body.y;
+        const motherHeight = this.mother.body.displayHeight;
+
+        //is player in reach && scenario not played yet
+        if (!this.motherScenarioPlayed && playerX + 30 > motherX) {
+
+            this.motherScenarioPlayed = true;
+
+            //stop movement player
+            this.char.body.moves = false;
+
+            const textBubble = this.add.image(motherX + 100, motherY - 50, "mother-textbubble")
+
         }
     }
+
 }
