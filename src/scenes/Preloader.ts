@@ -7,13 +7,18 @@ export class Preloader extends Phaser.Scene {
             pack: {
                 files: [
                     { type: 'image', key: 'bar', url: './assets/images/loadBar.png' },
-                    { type: 'image', key: 'barBg', url: './assets/images/barBg.png' }
+                    { type: 'image', key: 'barBg', url: './assets/images/barBg.png' },
+                    { type: 'image', key: 'phone', url: './assets/images/phone.png' }
+                    // { type: 'spritesheet', key: 'boy', url: './assets/spritesheets/boy.png', frameWidth: 120, frameHeight: 200 },
+                    // { type: 'spritesheet', key: 'girl', url: './assets/spritesheets/girl.png'},
                 ]
             }
         });
+        
+
     }
 
-    preload() {
+    public preload() {
         // add the loading bar to use as a display for the loading progress of the remainder of the assets
         const barBg = this.add.image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 'barBg');
         const bar = this.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 'bar');
@@ -41,7 +46,7 @@ export class Preloader extends Phaser.Scene {
         this.scene.start('main');
     }
 
-    loadAtlas() {
+    private loadAtlas() {
         const sheetPath = config.ssPath;
         const sheets = config.sheets;
 
@@ -52,7 +57,7 @@ export class Preloader extends Phaser.Scene {
         }
     }
 
-    loadAudio() {
+    private loadAudio() {
         const audioPath = config.audioPath;
         const audioFiles = config.audioFiles;
 
