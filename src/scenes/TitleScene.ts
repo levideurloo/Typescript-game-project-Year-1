@@ -3,86 +3,109 @@ import { Game } from "../models/Game";
 export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
-    private music: Phaser.Sound.BaseSound | undefined;
-
+    // private music: Phaser.Sound.BaseSound | undefined;
+    
     constructor() {
         super({
             key: 'main',
             pack: {
                 files: [
-                    { type: 'image', key: 'title-button', url: './assets/images/game-title.png' },
-                    { type: 'image', key: 'next-button', url: './assets/images/next-button.jpg' },
-                    { type: 'image', key: 'boy-image', url: './assets/images/boy-img.png' },
-                    { type: 'image', key: 'girl-image', url: './assets/images/girl-img.png' },
+                    { type: 'image', key: 'game-title', url: './assets/images/game-title.png' },
+                    { type: 'image', key: 'start-button', url: './assets/images/start-button.png' },
+                    { type: 'image', key: 'help-button', url: './assets/images/help-button.png'},
+                    { type: 'image', key: 'boy-1-image', url: './assets/images/boy-1-img.png' },
+                    { type: 'image', key: 'boy-2-image', url: './assets/images/boy-2-img.png' },
+                    { type: 'image', key: 'boy-3-image', url: './assets/images/boy-3-img.png' },
+                    { type: 'image', key: 'girl-1-image', url: './assets/images/girl-1-img.png' },
+                    { type: 'image', key: 'girl-2-image', url: './assets/images/girl-2-img.png' },
+                    { type: 'image', key: 'girl-3-image', url: './assets/images/girl-3-img.png' }
                 ]
             }
         });
     }
 
     public preload() {
-        this.loadMusic();
+        // this.loadMusic();
     }
 
     public create() {
         this.loadTitle();
         this.loadCharacters();
-        this.loadNextBtn();
+        this.loadStartButton();
+        this.loadHelpButton();
+        this.loadText();
     }
 
     private loadTitle() {
-        const title = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 5, 'title-button');
+        // Add title image
+        const title = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 5, 'game-title');
     }
 
     /**
      * Load music function
      */
-    private loadMusic() {
-        this.music = this.sound.add('DOG');
-        // this.music.play();
-    }
+    // private loadMusic() {
+    //     this.music = this.sound.add('DOG');
+    //     this.music.play();
+    // }
 
     /**
     * Stop music
     */
-    private stopMusic() {
-        if (this.music) {
-            this.music.stop();
-        }
-    }
+    // private stopMusic() {
+    //     if (this.music) {
+    //         this.music.stop();
+    //     }
+    // }
 
     /**
-     * Add next button to screen
+     * Add start button to screen
      */
-    private loadNextBtn() {
-
-        // Add next button image
-        const nextBtn = this.add.image(this.game.canvas.width / 2, this.game.canvas.height * 0.9, 'next-button').setScale(0.2);
+    private loadStartButton() {
+        // Add start button image
+        const startButton = this.add.image(this.game.canvas.width / 2, this.game.canvas.height * 0.9, 'start-button');
 
         //Add pointer down listener
-        nextBtn.setInteractive().on('pointerdown', () => {
+        startButton.setInteractive().on('pointerdown', () => {
 
             //check if a character is selected
             if (!(this.game as Game).characterInfo) {
-                alert("Selecteer eerst een speler!");
+                alert('Selecteer eerst je poppetje!');
                 return false;
             }
 
-            this.stopMusic();
-            this.scene.start("gamescene");
+            // this.stopMusic();
+            this.scene.start('gamescene');
         });
+    }
+
+    /**
+     * Add help button to screen
+     */
+    private loadHelpButton() {
+        // Add help button image
+        const helpButton = this.add.image(60, this.game.canvas.height * 0.9, 'help-button');
+
+        //Add pointer down listener
+        helpButton.setInteractive().on('pointerdown', () => {
+            this.scene.start('HelpScene');
+        })
     }
 
     /**
      * Add characters to screen
      */
     private loadCharacters() {
-
         //Add characters
-        const boyCharacter = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy-image').setScale(0.2).setName("boy");
-        const girlCharacter = this.add.image(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, 'girl-image').setScale(0.2).setName("girl");
+        const boy_1 = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy-1-image').setName('boy_1');
+        const boy_2 = this.add.image(this.game.canvas.width * 0.35, this.game.canvas.height * 0.5, 'boy-2-image').setName('boy_2');
+        const boy_3 = this.add.image(this.game.canvas.width * 0.45, this.game.canvas.height * 0.5, 'boy-3-image').setName('boy_3');
+        const girl_1 = this.add.image(this.game.canvas.width * 0.55, this.game.canvas.height * 0.5, 'girl-1-image').setName('girl_1');
+        const girl_2 = this.add.image(this.game.canvas.width * 0.65, this.game.canvas.height * 0.5, 'girl-2-image').setName('girl_2');
+        const girl_3 = this.add.image(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, 'girl-3-image').setName('girl_3');
 
         //Add pointer down listener
-        [boyCharacter, girlCharacter].forEach(function (element) {
+        [boy_1, boy_2, boy_3, girl_1, girl_2, girl_3].forEach(function (element) {
             element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
                 //destroy text
@@ -96,10 +119,17 @@ export class TitleScene extends Phaser.Scene {
                 (this.scene.game as Game).characterInfo = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.png` };
 
                 //set selected text
-                (this.scene as TitleScene).selectedCharacterText = this.scene.add.text(this.x - this.displayWidth / 2, (this.y + this.displayHeight) + 20, "Geselecteerd").setColor("white");
-
+                (this.scene as TitleScene).selectedCharacterText = this.scene.add.text(this.x - this.displayWidth / 2 + 20, (this.y + this.displayHeight - 35), 'ˆ').setColor('#baff80').setFontSize(32);
             });
         }, this);
 
+    }
+
+    private loadText() {
+        //Define what text is
+        const text = 'Kies je poppetje';
+
+        //Add text to canvas
+        const addText = this.add.text(this.game.canvas.width / 2 - 60, this.game.canvas.height / 3, text, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '14px', color: 'white' });
     }
 }

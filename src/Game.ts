@@ -3,6 +3,7 @@ import { Preloader } from './scenes/Preloader';
 import { GameScene } from './scenes/GameScene';
 import { Game } from "./models/Game";
 import { TitleScene } from './scenes/TitleScene';
+import { HelpScene } from './scenes/HelpScene';
 
 
 const config: GameConfig = {
@@ -14,6 +15,7 @@ const config: GameConfig = {
         Preloader,
         GameScene,
         TitleScene,
+        HelpScene
     ],
     physics: {
         default: 'arcade',
