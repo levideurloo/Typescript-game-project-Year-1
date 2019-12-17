@@ -10,11 +10,15 @@ export class GameScene extends Phaser.Scene {
     private map: any;
     private mother: any;
 
+    private bulliedChar: any;
+    private bullyOne: any;
+    private bullyTwo: any;
+    private bullyThree: any;
+
     /**
      * Boolean to check MOTHER
      */
-    private hasPassedMother: boolean = false;
-    private hasReceivedNotificationMother: boolean = false;
+    private hasReceivedNotificationBullies: boolean = false;
 
 
     constructor() {
@@ -23,9 +27,10 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload() {
+
         //load in the map
         this.load.image('map', './assets/images/map.png');
-        this.load.image('mother-textbubble', './assets/images/mother-textbubble.gif');
+        this.load.image('bully-text', './assets/images/bully-text.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
 
 
@@ -37,9 +42,10 @@ export class GameScene extends Phaser.Scene {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
 
-        // load mother character
-        this.load.spritesheet('mother', './assets/spritesheets/mother.png', { frameWidth: 64, frameHeight: 64 });
+        // load bully character
+        this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 })
 
+        this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 })
     }
 
     create() {
@@ -89,7 +95,7 @@ export class GameScene extends Phaser.Scene {
         phoneSprite.setDepth(1);
 
         this.phone.addSprite(phoneSprite, .38, .38);
-        this.loadMother();
+        this.loadBullies();
     }
 
     update() {
@@ -112,14 +118,15 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationMother)
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies)
             this.togglePhone();
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
-        this.onCollideMother();
-        this.receiveNotificationMother();
+
+        this.onCollideBullies();
+        // this.receiveNotificationMother();
 
         const phoneSprite = this.phone.getSprite();
 
@@ -167,45 +174,61 @@ export class GameScene extends Phaser.Scene {
     /**
      * Loads the mother 
      */
-    private loadMother() {
+    private loadBullies() {
 
         // Add mother character to the scene
-        this.mother = this.add.sprite(-500, 485, 'mother', 9); // -500 X-position  485 Y-postion
+        this.bulliedChar = this.add.sprite(130, 485, 'bulliedBoy', 9); // -500 X-position  485 Y-postion
 
-        this.physics.world.enableBody(this.mother);
-        this.physics.add.existing(this.mother);
+        this.bullyOne = this.add.sprite(90, 485, 'bully', 9); // -500 X-position  485 Y-postion
+        this.bullyTwo = this.add.sprite(150, 485, 'bully', 9); // -500 X-position  485 Y-postion
+        this.bullyThree = this.add.sprite(170, 485, 'bully', 9); // -500 X-position  485 Y-postion
+
+        this.bullyOne.flipX = true;
+
+        this.physics.world.enableBody(this.bulliedChar);
+        this.physics.world.enableBody(this.bullyOne);
+        this.physics.world.enableBody(this.bullyTwo);
+        this.physics.world.enableBody(this.bullyThree);
+
+        this.physics.add.existing(this.bulliedChar);
+        this.physics.add.existing(this.bullyOne);
+        this.physics.add.existing(this.bullyTwo);
+        this.physics.add.existing(this.bullyThree);
+
+        const bullyTextBubble = this.add.image(this.bullyOne.body.x + 100, this.bullyOne.body.y - 50, "bully-text")
     }
 
-    private onCollideMother() {
+
+    private onCollideBullies() {
 
         //get x from characters
         const playerX = this.char.body.x;
-        const motherY = this.mother.body.y;
-        const motherX = this.mother.body.x
-
 
         //is player in reach && scenario not played yet
-        if (!this.hasPassedMother && playerX + 30 > motherX) {
+        if (!this.hasReceivedNotificationBullies && playerX + 250 > this.bullyOne.body.x) {
 
-            this.hasPassedMother = true;
-            const textBubble = this.add.image(motherX + 100, motherY - 50, "mother-textbubble")
+            this.hasReceivedNotificationBullies = true;
+            const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
 
             setTimeout(function () {
                 textBubble.destroy();
             }, 10000);
-        }
-    }
 
-    private receiveNotificationMother() {
-
-        const playerX = this.char.body.x;
-        const motherX = this.mother.body.x
-        const notificaitonX = motherX + 780;
-
-        if (!this.hasReceivedNotificationMother && playerX > notificaitonX) {
-            this.hasReceivedNotificationMother = true;
             this.notify();
+
         }
     }
+
+    // private receiveNotificationMother() {
+
+    //     const playerX = this.char.body.x;
+    //     const motherX = this.mother.body.x
+    //     const notificaitonX = motherX + 780;
+
+    //     if (!this.hasReceivedNotificationMother && playerX > notificaitonX) {
+    //         this.hasReceivedNotificationMother = true;
+    //         this.notify();
+    //     }
+    // }
 
 }
