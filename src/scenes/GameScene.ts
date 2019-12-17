@@ -5,6 +5,7 @@ export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
+    private phoneMessage: any;
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
@@ -32,8 +33,9 @@ export class GameScene extends Phaser.Scene {
         this.load.image('map', './assets/images/map.png');
         this.load.image('bully-text', './assets/images/bully-text.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
-
-
+        // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
+        // this.phoneMessage.scaleX = .20;
+        // this.phoneMessage.scaleY = .20;
         const info = (this.game as Game).characterInfo;
 
 
@@ -118,8 +120,15 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies)
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies) {
             this.phone.togglePhone(this.map.displayHeight);
+
+            this.phoneMessage = this.add.sprite((this.char.body.x + 384), (this.map.displayHeight - 290), 'phone-message', 9); // -500 X-position  485 Y-postion
+            this.phoneMessage.scaleX = .47;
+            this.phoneMessage.scaleY = .40;
+            this.phoneMessage.setDepth(2);
+        }
+
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
@@ -132,6 +141,10 @@ export class GameScene extends Phaser.Scene {
 
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
+
+        if (this.phoneMessage) {
+            this.phoneMessage.setX(this.char.body.x + 384);
+        }
 
         this.boundPhone();
     }
@@ -162,13 +175,12 @@ export class GameScene extends Phaser.Scene {
             this.phone.togglePhone(this.map.displayHeight);
     }
 
-
     /**
-     * Loads the mother 
+     * Loads the Bullies 
      */
     private loadBullies() {
 
-        // Add mother character to the scene
+        // Add bullied character to the scene
         this.bulliedChar = this.add.sprite(130, 485, 'bulliedBoy', 9); // -500 X-position  485 Y-postion
 
         this.bullyOne = this.add.sprite(90, 485, 'bully', 9); // -500 X-position  485 Y-postion

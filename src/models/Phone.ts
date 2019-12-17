@@ -2,6 +2,8 @@
 export class Phone {
 	private isToggled: boolean = false;
 	private sprite: Phaser.GameObjects.Sprite | undefined;
+	private messageSprite: Phaser.GameObjects.Sprite | undefined;
+	private message: string = 'phone-message';
 
 	constructor() {
 
