@@ -17,6 +17,9 @@ export class Phone {
 		return this.sprite;
 	}
 	
+	/**
+     *  Show/Hide the in-game phone
+     */
 	public togglePhone(displayHeight: number) {
 		if (this.sprite) {
 			if (this.isToggled) {

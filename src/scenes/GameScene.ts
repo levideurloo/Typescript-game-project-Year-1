@@ -119,7 +119,7 @@ export class GameScene extends Phaser.Scene {
 
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies)
-            this.togglePhone();
+            this.phone.togglePhone(this.map.displayHeight);
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
@@ -152,14 +152,6 @@ export class GameScene extends Phaser.Scene {
             textBubble.destroy();
         }, 10000);
 
-    }
-
-    /**
-     * Let the phone appear on the screen
-     */
-    private togglePhone() {
-        if (this.phone)
-            this.phone.togglePhone(this.map.displayHeight);
     }
 
     /**
