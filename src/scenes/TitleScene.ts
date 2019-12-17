@@ -4,7 +4,7 @@ export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
     private music: Phaser.Sound.BaseSound | undefined;
-    
+
     constructor() {
         super({
             key: 'main',
@@ -12,8 +12,8 @@ export class TitleScene extends Phaser.Scene {
                 files: [
                     { type: 'image', key: 'game-title', url: './assets/images/game-title.png' },
                     { type: 'image', key: 'start-button', url: './assets/images/start-button.png' },
-                    { type: 'image', key: 'help-button', url: './assets/images/help-button.png'},
-                    { type: 'image', key: 'mute-button', url: './assets/images/mute-button.png'},
+                    { type: 'image', key: 'help-button', url: './assets/images/help-button.png' },
+                    { type: 'image', key: 'mute-button', url: './assets/images/mute-button.png' },
                     { type: 'image', key: 'boy-1-image', url: './assets/images/boy-1-img.png' },
                     { type: 'image', key: 'boy-2-image', url: './assets/images/boy-2-img.png' },
                     { type: 'image', key: 'girl-1-image', url: './assets/images/girl-1-img.png' },
@@ -45,7 +45,11 @@ export class TitleScene extends Phaser.Scene {
      * Load music function
      */
     private loadMusic() {
-        this.music = this.sound.add('DOG');
+
+        if (!this.music) {
+            this.music = this.sound.add('DOG');
+        }
+
         this.music.play();
     }
 
@@ -96,8 +100,15 @@ export class TitleScene extends Phaser.Scene {
         const muteButton = this.add.image(this.game.canvas.width - 60, this.game.canvas.height * 0.9, 'mute-button');
 
         muteButton.setInteractive().on('pointerdown', () => {
+
             if (this.music) {
-                this.stopMusic();
+
+                if (this.music.isPlaying) {
+                    this.stopMusic();
+                } else {
+                    this.loadMusic();
+                }
+
             }
         })
 
