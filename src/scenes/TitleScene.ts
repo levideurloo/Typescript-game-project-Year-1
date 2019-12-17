@@ -3,8 +3,8 @@ import { Game } from "../models/Game";
 export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
-    // private music: Phaser.Sound.BaseSound | undefined;
-    
+    private music: Phaser.Sound.BaseSound | undefined;
+
     constructor() {
         super({
             key: 'main',
@@ -12,20 +12,19 @@ export class TitleScene extends Phaser.Scene {
                 files: [
                     { type: 'image', key: 'game-title', url: './assets/images/game-title.png' },
                     { type: 'image', key: 'start-button', url: './assets/images/start-button.png' },
-                    { type: 'image', key: 'help-button', url: './assets/images/help-button.png'},
+                    { type: 'image', key: 'help-button', url: './assets/images/help-button.png' },
+                    { type: 'image', key: 'mute-button', url: './assets/images/mute-button.png' },
                     { type: 'image', key: 'boy-1-image', url: './assets/images/boy-1-img.png' },
                     { type: 'image', key: 'boy-2-image', url: './assets/images/boy-2-img.png' },
-                    { type: 'image', key: 'boy-3-image', url: './assets/images/boy-3-img.png' },
                     { type: 'image', key: 'girl-1-image', url: './assets/images/girl-1-img.png' },
-                    { type: 'image', key: 'girl-2-image', url: './assets/images/girl-2-img.png' },
-                    { type: 'image', key: 'girl-3-image', url: './assets/images/girl-3-img.png' }
+                    { type: 'image', key: 'girl-2-image', url: './assets/images/girl-2-img.png' }
                 ]
             }
         });
     }
 
     public preload() {
-        // this.loadMusic();
+        this.loadMusic();
     }
 
     public create() {
@@ -33,6 +32,7 @@ export class TitleScene extends Phaser.Scene {
         this.loadCharacters();
         this.loadStartButton();
         this.loadHelpButton();
+        this.loadMutebutton();
         this.loadText();
     }
 
@@ -44,19 +44,23 @@ export class TitleScene extends Phaser.Scene {
     /**
      * Load music function
      */
-    // private loadMusic() {
-    //     this.music = this.sound.add('DOG');
-    //     this.music.play();
-    // }
+    private loadMusic() {
+
+        if (!this.music) {
+            this.music = this.sound.add('DOG');
+        }
+
+        this.music.play();
+    }
 
     /**
     * Stop music
     */
-    // private stopMusic() {
-    //     if (this.music) {
-    //         this.music.stop();
-    //     }
-    // }
+    private stopMusic() {
+        if (this.music) {
+            this.music.stop();
+        }
+    }
 
     /**
      * Add start button to screen
@@ -74,7 +78,6 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
-            // this.stopMusic();
             this.scene.start('gamescene');
         });
     }
@@ -92,20 +95,37 @@ export class TitleScene extends Phaser.Scene {
         })
     }
 
+    private loadMutebutton() {
+        // Add mute button image
+        const muteButton = this.add.image(this.game.canvas.width - 60, this.game.canvas.height * 0.9, 'mute-button');
+
+        muteButton.setInteractive().on('pointerdown', () => {
+
+            if (this.music) {
+
+                if (this.music.isPlaying) {
+                    this.stopMusic();
+                } else {
+                    this.loadMusic();
+                }
+
+            }
+        })
+
+    }
+
     /**
      * Add characters to screen
      */
     private loadCharacters() {
         //Add characters
-        const boy_1 = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy-1-image').setName('boy_1');
-        const boy_2 = this.add.image(this.game.canvas.width * 0.35, this.game.canvas.height * 0.5, 'boy-2-image').setName('boy_2');
-        const boy_3 = this.add.image(this.game.canvas.width * 0.45, this.game.canvas.height * 0.5, 'boy-3-image').setName('boy_3');
+        const boy_1 = this.add.image(this.game.canvas.width * 0.35, this.game.canvas.height * 0.5, 'boy-1-image').setName('boy_1');
+        const boy_2 = this.add.image(this.game.canvas.width * 0.45, this.game.canvas.height * 0.5, 'boy-2-image').setName('boy_2');
         const girl_1 = this.add.image(this.game.canvas.width * 0.55, this.game.canvas.height * 0.5, 'girl-1-image').setName('girl_1');
         const girl_2 = this.add.image(this.game.canvas.width * 0.65, this.game.canvas.height * 0.5, 'girl-2-image').setName('girl_2');
-        const girl_3 = this.add.image(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, 'girl-3-image').setName('girl_3');
 
         //Add pointer down listener
-        [boy_1, boy_2, boy_3, girl_1, girl_2, girl_3].forEach(function (element) {
+        [boy_1, boy_2, girl_1, girl_2].forEach(function (element) {
             element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
                 //destroy text
