@@ -16,10 +16,8 @@ export class TitleScene extends Phaser.Scene {
                     { type: 'image', key: 'mute-button', url: './assets/images/mute-button.png'},
                     { type: 'image', key: 'boy-1-image', url: './assets/images/boy-1-img.png' },
                     { type: 'image', key: 'boy-2-image', url: './assets/images/boy-2-img.png' },
-                    { type: 'image', key: 'boy-3-image', url: './assets/images/boy-3-img.png' },
                     { type: 'image', key: 'girl-1-image', url: './assets/images/girl-1-img.png' },
-                    { type: 'image', key: 'girl-2-image', url: './assets/images/girl-2-img.png' },
-                    { type: 'image', key: 'girl-3-image', url: './assets/images/girl-3-img.png' }
+                    { type: 'image', key: 'girl-2-image', url: './assets/images/girl-2-img.png' }
                 ]
             }
         });
@@ -110,15 +108,13 @@ export class TitleScene extends Phaser.Scene {
      */
     private loadCharacters() {
         //Add characters
-        const boy_1 = this.add.image(this.game.canvas.width * 0.25, this.game.canvas.height * 0.5, 'boy-1-image').setName('boy_1');
-        const boy_2 = this.add.image(this.game.canvas.width * 0.35, this.game.canvas.height * 0.5, 'boy-2-image').setName('boy_2');
-        const boy_3 = this.add.image(this.game.canvas.width * 0.45, this.game.canvas.height * 0.5, 'boy-3-image').setName('boy_3');
+        const boy_1 = this.add.image(this.game.canvas.width * 0.35, this.game.canvas.height * 0.5, 'boy-1-image').setName('boy_1');
+        const boy_2 = this.add.image(this.game.canvas.width * 0.45, this.game.canvas.height * 0.5, 'boy-2-image').setName('boy_2');
         const girl_1 = this.add.image(this.game.canvas.width * 0.55, this.game.canvas.height * 0.5, 'girl-1-image').setName('girl_1');
         const girl_2 = this.add.image(this.game.canvas.width * 0.65, this.game.canvas.height * 0.5, 'girl-2-image').setName('girl_2');
-        const girl_3 = this.add.image(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, 'girl-3-image').setName('girl_3');
 
         //Add pointer down listener
-        [boy_1, boy_2, boy_3, girl_1, girl_2, girl_3].forEach(function (element) {
+        [boy_1, boy_2, girl_1, girl_2].forEach(function (element) {
             element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
                 //destroy text
