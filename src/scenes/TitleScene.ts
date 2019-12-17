@@ -3,7 +3,7 @@ import { Game } from "../models/Game";
 export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
-    // private music: Phaser.Sound.BaseSound | undefined;
+    private music: Phaser.Sound.BaseSound | undefined;
     
     constructor() {
         super({
@@ -13,6 +13,7 @@ export class TitleScene extends Phaser.Scene {
                     { type: 'image', key: 'game-title', url: './assets/images/game-title.png' },
                     { type: 'image', key: 'start-button', url: './assets/images/start-button.png' },
                     { type: 'image', key: 'help-button', url: './assets/images/help-button.png'},
+                    { type: 'image', key: 'mute-button', url: './assets/images/mute-button.png'},
                     { type: 'image', key: 'boy-1-image', url: './assets/images/boy-1-img.png' },
                     { type: 'image', key: 'boy-2-image', url: './assets/images/boy-2-img.png' },
                     { type: 'image', key: 'boy-3-image', url: './assets/images/boy-3-img.png' },
@@ -25,7 +26,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     public preload() {
-        // this.loadMusic();
+        this.loadMusic();
     }
 
     public create() {
@@ -33,6 +34,7 @@ export class TitleScene extends Phaser.Scene {
         this.loadCharacters();
         this.loadStartButton();
         this.loadHelpButton();
+        this.loadMutebutton();
         this.loadText();
     }
 
@@ -44,19 +46,19 @@ export class TitleScene extends Phaser.Scene {
     /**
      * Load music function
      */
-    // private loadMusic() {
-    //     this.music = this.sound.add('DOG');
-    //     this.music.play();
-    // }
+    private loadMusic() {
+        this.music = this.sound.add('DOG');
+        this.music.play();
+    }
 
     /**
     * Stop music
     */
-    // private stopMusic() {
-    //     if (this.music) {
-    //         this.music.stop();
-    //     }
-    // }
+    private stopMusic() {
+        if (this.music) {
+            this.music.stop();
+        }
+    }
 
     /**
      * Add start button to screen
@@ -74,7 +76,6 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
-            // this.stopMusic();
             this.scene.start('gamescene');
         });
     }
@@ -90,6 +91,18 @@ export class TitleScene extends Phaser.Scene {
         helpButton.setInteractive().on('pointerdown', () => {
             this.scene.start('HelpScene');
         })
+    }
+
+    private loadMutebutton() {
+        // Add mute button image
+        const muteButton = this.add.image(this.game.canvas.width - 60, this.game.canvas.height * 0.9, 'mute-button');
+
+        muteButton.setInteractive().on('pointerdown', () => {
+            if (this.music) {
+                this.stopMusic();
+            }
+        })
+
     }
 
     /**
