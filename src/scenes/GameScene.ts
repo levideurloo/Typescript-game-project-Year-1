@@ -1,3 +1,4 @@
+import { Message } from './../models/Message';
 import { Phone } from './../models/Phone';
 import { Game } from "../models/Game";
 
@@ -5,7 +6,8 @@ export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
-    private phoneMessage: any;
+    private phoneMessage: Message;
+    private question: Phaser.GameObjects.Text | any;
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
@@ -25,6 +27,7 @@ export class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'gamescene' });
         this.phone = new Phone();
+        this.phoneMessage = new Message();
     }
 
     preload() {
@@ -96,7 +99,11 @@ export class GameScene extends Phaser.Scene {
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
         phoneSprite.setDepth(1);
 
+        const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        messageSprite.setDepth(2);
+
         this.phone.addSprite(phoneSprite, .38, .38);
+        this.phoneMessage.addSprite(messageSprite, .47, .30);
         this.loadBullies();
     }
 
@@ -122,11 +129,8 @@ export class GameScene extends Phaser.Scene {
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies) {
             this.phone.togglePhone(this.map.displayHeight);
-
-            this.phoneMessage = this.add.sprite((this.char.body.x + 384), (this.map.displayHeight - 290), 'phone-message', 9); // -500 X-position  485 Y-postion
-            this.phoneMessage.scaleX = .47;
-            this.phoneMessage.scaleY = .40;
-            this.phoneMessage.setDepth(2);
+            this.phoneMessage.toggleMessage(this.map.displayHeight);
+            this.addQuestion('Het jongetje wordt gepest Wat doe je nu?');
         }
 
 
@@ -138,13 +142,16 @@ export class GameScene extends Phaser.Scene {
         // this.receiveNotificationMother();
 
         const phoneSprite = this.phone.getSprite();
+        const messageSprite = this.phoneMessage.getSprite();
 
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
 
-        if (this.phoneMessage) {
-            this.phoneMessage.setX(this.char.body.x + 384);
-        }
+        if (messageSprite)
+            messageSprite.setX(this.char.body.x + 385);
+
+        if (this.question)
+            this.question.setX(this.char.body.x + 307);
 
         this.boundPhone();
     }
@@ -171,8 +178,15 @@ export class GameScene extends Phaser.Scene {
      * Let the phone appear on the screen
      */
     private boundPhone() {
-        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
+        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState()) {
             this.phone.togglePhone(this.map.displayHeight);
+            this.phoneMessage.toggleMessage(this.map.displayHeight);
+        }
+    }
+
+    public addQuestion(question: string) {
+        this.question = this.add.text(this.char.body.x + 307, this.map.displayHeight - 325, question, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+        this.question.setDepth(3);
     }
 
     /**

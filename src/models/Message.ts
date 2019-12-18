@@ -1,11 +1,10 @@
-import { Message } from './Message';
 
-export class Phone {
+export class Message {
 	private isToggled: boolean = false;
 	private sprite: Phaser.GameObjects.Sprite | undefined;
-	private message: Message = new Message;
 
 	constructor() {
+
 	}
 
 	public addSprite(sprite: Phaser.GameObjects.Sprite, scaleX: number, scaleY: number) {
@@ -14,20 +13,22 @@ export class Phone {
 		this.sprite.scaleY = scaleY;
 	}
 
+	
+
 	public getSprite() {
 		return this.sprite;
 	}
-	
+
 	/**
      *  Show/Hide the in-game phone
      */
-	public togglePhone(displayHeight: number) {
+	public toggleMessage(displayHeight: number) {
 		if (this.sprite) {
 			if (this.isToggled) {
 				this.sprite.y = (displayHeight + 250);
 				this.isToggled = false;
 			} else {
-				this.sprite.y = (displayHeight - 175);
+				this.sprite.y = (displayHeight - 295);
 				this.isToggled = true;
 			}
 		}
