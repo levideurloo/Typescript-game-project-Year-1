@@ -69,12 +69,14 @@ export class TitleScene extends Phaser.Scene {
         // Add start button image
         const startButton = this.add.image(this.game.canvas.width / 2, this.game.canvas.height * 0.9, 'start-button');
 
-        //Add pointer down listener
+        // Add pointer down listener
         startButton.setInteractive().on('pointerdown', () => {
 
-            //check if a character is selected
+            // Check if a character is selected
             if (!(this.game as Game).characterInfo) {
-                alert('Selecteer eerst je poppetje!');
+                // If not selected add following message to canvas ('Selecteer eerst je poppetje!')
+                const selectFirst = 'Selecteer eerst je poppetje!';
+                const addText = this.add.text(this.game.canvas.width / 2 - 100, 440, selectFirst, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '14px', color: 'white' });
                 return false;
             }
 
@@ -152,4 +154,6 @@ export class TitleScene extends Phaser.Scene {
         //Add text to canvas
         const addText = this.add.text(this.game.canvas.width / 2 - 60, this.game.canvas.height / 3, text, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '14px', color: 'white' });
     }
+
+
 }
