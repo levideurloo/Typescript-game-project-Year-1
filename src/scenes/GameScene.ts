@@ -52,6 +52,8 @@ export class GameScene extends Phaser.Scene {
         this.phone.addAnswer('Antwoord A');
         this.phone.addAnswer('Antwoord B');
         this.phone.addAnswer('Antwoord C');
+        this.phone.addAnswer('Antwoord D');
+
     }
 
     create() {
@@ -98,22 +100,16 @@ export class GameScene extends Phaser.Scene {
 
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
-        phoneSprite.setDepth(1);
 
         const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        messageSprite.setDepth(2);
 
         const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        answerSprite1.setDepth(2);
 
         const answerSprite2 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        answerSprite2.setDepth(2);
 
         const answerSprite3 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        answerSprite3.setDepth(2);
 
         const answerSprite4 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        answerSprite4.setDepth(2);
 
         this.phone.setSprite(phoneSprite, .38, .38);
         this.phone.setQuestionSprite(messageSprite, .47, .30);
@@ -164,9 +160,6 @@ export class GameScene extends Phaser.Scene {
         const answer3 = this.phone.getAnswerSprite(3);
         const answer4 = this.phone.getAnswerSprite(4);
 
-        // console.log(phoneSprite)
-        // console.log(messageSprite)
-
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
 
@@ -201,7 +194,7 @@ export class GameScene extends Phaser.Scene {
 
         // display message
         const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble");
-        this.phone.setQuestion('Het jongetje wordt gepest Wat doe je nu?');
+        this.phone.setQuestion('Een klasgenoot wordt gepest. Wat is de juiste actie?');
 
         setTimeout(function () {
             textBubble.destroy();
@@ -222,8 +215,13 @@ export class GameScene extends Phaser.Scene {
      * Toggle the question & answers
      */
     private toggleQuestion(displayHeight: number | undefined) {
+
+        //Stop player from moving
+        // this.char.setVelocityX(0);
+        this.char.body.moves = false
+
         // Toggle the question
-        if (this.question) 
+        if (this.question)
             this.question.y = (this.map.displayHeight + displayHeight - 35);
         else {
             this.question = this.add.text(this.char.body.x + 307, (this.map.displayHeight + displayHeight - 35), this.phone.getQuestion(), { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
@@ -233,24 +231,30 @@ export class GameScene extends Phaser.Scene {
         // Toggle the answers
         const answers = this.phone.getAnswers();
 
-        if (answers.length > 0) {
-            // let i = 0;
-            // console.log(answers)
-            // for (let answer in answers) {
-            //     let distanceFromTop;
+        for (let i = 0; i < answers.length; i++) {
+            const sprite = this.phone.getAnswerSprite(i + 1);
 
-            //     if (displayHeight)
-            //         distanceFromTop = ((i * 40) + displayHeight);
+            if (sprite) {
+                sprite.setDepth(3);
 
-            //     this.add.text(this.char.body.x + 307, (this.map.displayHeight + displayHeight), answer, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-            //     i++;
-            //     console.log(answer);
-            //     const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-            //     answerSprite1.setDepth(2);
-            //     answerSprite1.scaleX = .47;
-            //     answerSprite1.scaleY = .30;
-            // }
+                const text = this.add.text(this.char.body.x + 307, sprite.y - 12, answers[i], { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                text.setDepth(4);
+            }
+
         }
+        // for (let answer in answers) {
+        //     let distanceFromTop;
+
+        //     if (displayHeight)
+        //         distanceFromTop = ((i * 40) + displayHeight);
+
+        //     console.log(answer);
+        //     const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        //     answerSprite1.setDepth(2);
+        //     answerSprite1.scaleX = .47;
+        //     answerSprite1.scaleY = .30;
+        // }
+
     }
 
     /**
