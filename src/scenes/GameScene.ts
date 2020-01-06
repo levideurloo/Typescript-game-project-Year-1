@@ -16,12 +16,6 @@ export class GameScene extends Phaser.Scene {
     private bullyTwo: any;
     private bullyThree: any;
 
-    private text1: Phaser.GameObjects.Text | any;
-    private text2: Phaser.GameObjects.Text | any;
-    private text3: Phaser.GameObjects.Text | any;
-    private text4: Phaser.GameObjects.Text | any;
-
-
     /**
      * Boolean to check MOTHER
      */
@@ -249,6 +243,10 @@ export class GameScene extends Phaser.Scene {
 
                 const text = this.add.text(this.char.body.x + 307, sprite.y - 12, answers[i], { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
                 text.setDepth(10);
+
+                sprite.setInteractive().on('pointerdown', () => {
+                    alert(answers[i]);
+                });
             }
 
         }

@@ -110,7 +110,7 @@ export class TitleScene extends Phaser.Scene {
                 }
 
             }
-        })
+        });
 
     }
 
