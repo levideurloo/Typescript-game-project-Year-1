@@ -16,6 +16,12 @@ export class GameScene extends Phaser.Scene {
     private bullyTwo: any;
     private bullyThree: any;
 
+    private text1: Phaser.GameObjects.Text | any;
+    private text2: Phaser.GameObjects.Text | any;
+    private text3: Phaser.GameObjects.Text | any;
+    private text4: Phaser.GameObjects.Text | any;
+
+
     /**
      * Boolean to check MOTHER
      */
@@ -36,6 +42,7 @@ export class GameScene extends Phaser.Scene {
         // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
         // this.phoneMessage.scaleX = .20;
         // this.phoneMessage.scaleY = .20;
+
         const info = (this.game as Game).characterInfo;
 
 
@@ -102,6 +109,7 @@ export class GameScene extends Phaser.Scene {
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
 
         const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        messageSprite.setDepth(7);
 
         const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
 
@@ -142,7 +150,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies) {
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies && !this.phone.isToggled) {
             const displayHeight = this.phone.togglePhone(this.map.displayHeight);
             this.toggleQuestion(displayHeight);
         }
@@ -160,8 +168,10 @@ export class GameScene extends Phaser.Scene {
         const answer3 = this.phone.getAnswerSprite(3);
         const answer4 = this.phone.getAnswerSprite(4);
 
-        if (phoneSprite)
+        if (phoneSprite) {
             phoneSprite.setX(this.char.body.x + 385);
+            phoneSprite.setDepth(6);
+        }
 
         if (messageSprite)
             messageSprite.setX(this.char.body.x + 385);
@@ -225,7 +235,7 @@ export class GameScene extends Phaser.Scene {
             this.question.y = (this.map.displayHeight + displayHeight - 35);
         else {
             this.question = this.add.text(this.char.body.x + 307, (this.map.displayHeight + displayHeight - 35), this.phone.getQuestion(), { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-            this.question.setDepth(3);
+            this.question.setDepth(9);
         }
 
         // Toggle the answers
@@ -235,25 +245,13 @@ export class GameScene extends Phaser.Scene {
             const sprite = this.phone.getAnswerSprite(i + 1);
 
             if (sprite) {
-                sprite.setDepth(3);
+                sprite.setDepth(9);
 
                 const text = this.add.text(this.char.body.x + 307, sprite.y - 12, answers[i], { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                text.setDepth(4);
+                text.setDepth(10);
             }
 
         }
-        // for (let answer in answers) {
-        //     let distanceFromTop;
-
-        //     if (displayHeight)
-        //         distanceFromTop = ((i * 40) + displayHeight);
-
-        //     console.log(answer);
-        //     const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-        //     answerSprite1.setDepth(2);
-        //     answerSprite1.scaleX = .47;
-        //     answerSprite1.scaleY = .30;
-        // }
 
     }
 
@@ -294,7 +292,7 @@ export class GameScene extends Phaser.Scene {
         if (!this.hasReceivedNotificationBullies && playerX + 250 > this.bullyOne.body.x) {
 
             this.hasReceivedNotificationBullies = true;
-            const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+            const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble");
 
             setTimeout(function () {
                 textBubble.destroy();

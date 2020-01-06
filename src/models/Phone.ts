@@ -1,5 +1,5 @@
  export class Phone {
-	private isToggled: boolean = false;
+	public isToggled: boolean = false;
 	private sprite: Phaser.GameObjects.Sprite | undefined;
 	private questionSprite: Phaser.GameObjects.Sprite | undefined;
 	private answer1: Phaser.GameObjects.Sprite | undefined;
