@@ -1,3 +1,4 @@
+import { Answer } from './../models/Answer';
 import { Message } from './../models/Message';
 import { Phone } from './../models/Phone';
 import { Game } from "../models/Game";
@@ -6,7 +7,7 @@ export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
-    private phoneMessage: Message;
+    // private phoneMessage: Message;
     private question: Phaser.GameObjects.Text | any;
     private cursorKeys: any;
     private spaceBar: any;
@@ -27,7 +28,7 @@ export class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'gamescene' });
         this.phone = new Phone();
-        this.phoneMessage = new Message();
+        // this.phoneMessage = new Message();
     }
 
     preload() {
@@ -51,6 +52,10 @@ export class GameScene extends Phaser.Scene {
         this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 })
 
         this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 })
+
+        this.phone.addAnswer('Antwoord A');
+        this.phone.addAnswer('Antwoord B');
+        this.phone.addAnswer('Antwoord C');
     }
 
     create() {
@@ -102,8 +107,8 @@ export class GameScene extends Phaser.Scene {
         const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
         messageSprite.setDepth(2);
 
-        this.phone.addSprite(phoneSprite, .38, .38);
-        this.phoneMessage.addSprite(messageSprite, .47, .30);
+        this.phone.setSprite(phoneSprite, .38, .38);
+        this.phone.setQuestionSprite(messageSprite, .47, .30);
         this.loadBullies();
     }
 
@@ -112,12 +117,12 @@ export class GameScene extends Phaser.Scene {
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(75); // move right with 75 speed
+            this.char.body.setVelocityX(275); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-75) // move left with 75 speed
+            this.char.body.setVelocityX(-275) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -128,21 +133,21 @@ export class GameScene extends Phaser.Scene {
 
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies) {
-            this.phone.togglePhone(this.map.displayHeight);
-            this.phoneMessage.toggleMessage(this.map.displayHeight);
-            this.addQuestion('Het jongetje wordt gepest Wat doe je nu?');
+            const displayHeight = this.phone.togglePhone(this.map.displayHeight);
+            this.toggleQuestion(displayHeight);
         }
-
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
-
 
         this.onCollideBullies();
         // this.receiveNotificationMother();
 
         const phoneSprite = this.phone.getSprite();
-        const messageSprite = this.phoneMessage.getSprite();
+        const messageSprite = this.phone.getQuestionSprite();
+
+        // console.log(phoneSprite)
+        // console.log(messageSprite)
 
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
@@ -160,18 +165,18 @@ export class GameScene extends Phaser.Scene {
      * Function which displays a notification by playing a sound and showing a message.
      */
     private notify() {
-
         // play sound
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
 
         // display message
-        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble");
+        // this.addQuestion('Het jongetje wordt gepest Wat doe je nu?');
+        this.phone.setQuestion('Het jongetje wordt gepest Wat doe je nu?');
 
         setTimeout(function () {
             textBubble.destroy();
         }, 10000);
-
     }
 
     /**
@@ -180,13 +185,27 @@ export class GameScene extends Phaser.Scene {
     private boundPhone() {
         if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState()) {
             this.phone.togglePhone(this.map.displayHeight);
-            this.phoneMessage.toggleMessage(this.map.displayHeight);
+            this.toggleQuestion(305);
         }
     }
 
-    public addQuestion(question: string) {
-        this.question = this.add.text(this.char.body.x + 307, this.map.displayHeight - 325, question, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-        this.question.setDepth(3);
+    /**
+     * Toggle the question & answers
+     */
+    private toggleQuestion(displayHeight: number | undefined) {
+        // Toggle the question
+        if (this.question)
+            this.question.y = (this.map.displayHeight + displayHeight - 35);
+        else {
+            this.question = this.add.text(this.char.body.x + 307, (this.map.displayHeight + displayHeight - 35), this.phone.getQuestion(), { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            this.question.setDepth(3);
+        }
+
+        // Toggle the answers
+        const answers = this.phone.getAnswers();
+        if (answers.length > 0) {
+            
+        }
     }
 
     /**
@@ -236,7 +255,6 @@ export class GameScene extends Phaser.Scene {
 
         }
     }
-
     // private receiveNotificationMother() {
 
     //     const playerX = this.char.body.x;
