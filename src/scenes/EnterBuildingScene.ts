@@ -12,6 +12,11 @@ export class EnterBuildingScene extends Phaser.Scene {
     private arrow: any;
     private canEnter: any;
 
+        /**
+     * Boolean to check if player has recieved control notification
+     */
+    private hasReceivedEntryControls: boolean = false;
+
     constructor() {
         super({ key: 'enterbuildingscene' });
         this.phone = new Phone();
@@ -21,7 +26,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         //load in the map
         this.load.image('map', './assets/images/map.png');
-        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+        this.load.image('enterbuilding-bubble', './assets/images/enterbuilding-bubble.gif');
 
         const info = (this.game as Game).characterInfo;
 
@@ -149,6 +154,9 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Function that allow players to enter a building
         this.enterBuilding();
+
+        // Function that shows player the controls to aenter a building
+        this.showEntryControls();
     }
 
     /**
@@ -159,13 +167,6 @@ export class EnterBuildingScene extends Phaser.Scene {
         // play sound
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
-
-        // display message
-        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
-
-        setTimeout(function () {
-            textBubble.destroy();
-        }, 10000);
 
     }
 
@@ -185,6 +186,23 @@ export class EnterBuildingScene extends Phaser.Scene {
             this.phone.togglePhone(this.map.displayHeight);
     }
 
+    private showEntryControls() {
+        // Get X coordinate from character
+        const playerX = this.char.body.x;
+
+        // Is player in reach && has message not been displayed yet
+        if (!this.hasReceivedEntryControls && playerX > 350) {
+
+            this.hasReceivedEntryControls = true;
+            const textBubble = this.add.image(this.char.body.x + 150, this.char.body.y - 50, "enterbuilding-bubble")
+            
+            setTimeout(function () {
+                textBubble.destroy();
+            }, 10000);
+
+            this.notify();
+        }
+    }
 
     private enterBuilding() {
         if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
