@@ -24,7 +24,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     public preload() {
-        this.loadMusic();
+        // this.loadMusic();
     }
 
     public create() {
@@ -80,7 +80,7 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
-            this.scene.start('gamescene');
+            this.scene.start('enterbuildingscene', { charX: 60 });
         });
     }
 
@@ -112,7 +112,7 @@ export class TitleScene extends Phaser.Scene {
                 }
 
             }
-        })
+        });
 
     }
 

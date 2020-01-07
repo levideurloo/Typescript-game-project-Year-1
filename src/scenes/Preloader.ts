@@ -8,7 +8,8 @@ export class Preloader extends Phaser.Scene {
                 files: [
                     { type: 'image', key: 'bar', url: './assets/images/loadBar.png' },
                     { type: 'image', key: 'barBg', url: './assets/images/barBg.png' },
-                    { type: 'image', key: 'phone', url: './assets/images/phone.png' }
+                    { type: 'image', key: 'phone', url: './assets/images/phone.png' },
+                    { type: 'image', key: 'phone_message', url: './assets/images/phone_message.png' }
                     // { type: 'spritesheet', key: 'boy', url: './assets/spritesheets/boy.png', frameWidth: 120, frameHeight: 200 },
                     // { type: 'spritesheet', key: 'girl', url: './assets/spritesheets/girl.png'},
                 ]

@@ -5,6 +5,7 @@ export class GameScene extends Phaser.Scene {
 
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
+    private question: Phaser.GameObjects.Text | any;
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
@@ -14,6 +15,8 @@ export class GameScene extends Phaser.Scene {
     private bullyOne: any;
     private bullyTwo: any;
     private bullyThree: any;
+
+    private answerCorrect: boolean = false;
 
     /**
      * Boolean to check MOTHER
@@ -32,7 +35,12 @@ export class GameScene extends Phaser.Scene {
         this.load.image('map', './assets/images/map.png');
         this.load.image('bully-text', './assets/images/bully-text.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+        this.load.image('msg-background', './assets/images/msg-background.jpg');
+        this.load.image('volgende-button', './assets/images/volgende-button.png');
 
+        // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
+        // this.phoneMessage.scaleX = .20;
+        // this.phoneMessage.scaleY = .20;
 
         const info = (this.game as Game).characterInfo;
 
@@ -46,6 +54,11 @@ export class GameScene extends Phaser.Scene {
         this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 })
 
         this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 })
+
+        this.phone.addAnswer('Sla de pestkop in elkaar');
+        this.phone.addAnswer('Zoek hulp bij een leraar');
+        this.phone.addAnswer('Help de pesters');
+        this.phone.addAnswer('Doe niks');
     }
 
     create() {
@@ -56,7 +69,7 @@ export class GameScene extends Phaser.Scene {
         const characterName = info ? info.name : 'boy';
 
         // Add map to the scene
-        this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map")
+        this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map");
         this.map.displayWidth = 2500;
         this.map.displayHeight = this.game.canvas.height;
 
@@ -92,9 +105,25 @@ export class GameScene extends Phaser.Scene {
 
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
-        phoneSprite.setDepth(1);
 
-        this.phone.addSprite(phoneSprite, .38, .38);
+        const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        messageSprite.setDepth(7);
+
+        const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        const answerSprite2 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        const answerSprite3 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        const answerSprite4 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        //temp hide since we dont need
+
+        this.phone.setSprite(phoneSprite, .38, .38);
+        this.phone.setQuestionSprite(messageSprite, .47, .30);
+
+        const answerHeight = .15;
+        this.phone.setAnswerSprite(1, answerSprite1, .47, answerHeight);
+        this.phone.setAnswerSprite(2, answerSprite2, .47, answerHeight);
+        this.phone.setAnswerSprite(3, answerSprite3, .47, answerHeight);
+        this.phone.setAnswerSprite(4, answerSprite4, .47, answerHeight);
         this.loadBullies();
     }
 
@@ -103,12 +132,12 @@ export class GameScene extends Phaser.Scene {
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(75); // move right with 75 speed
+            this.char.body.setVelocityX(275); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-75) // move left with 75 speed
+            this.char.body.setVelocityX(-275) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -118,20 +147,46 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies)
-            this.togglePhone();
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.hasReceivedNotificationBullies && !this.phone.isToggled) {
+            const displayHeight = this.phone.togglePhone(this.map.displayHeight);
+            this.toggleQuestion(displayHeight);
+        }
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
-
 
         this.onCollideBullies();
         // this.receiveNotificationMother();
 
         const phoneSprite = this.phone.getSprite();
+        const messageSprite = this.phone.getQuestionSprite();
+        const answer1 = this.phone.getAnswerSprite(1);
+        const answer2 = this.phone.getAnswerSprite(2);
+        const answer3 = this.phone.getAnswerSprite(3);
+        const answer4 = this.phone.getAnswerSprite(4);
 
-        if (phoneSprite)
+        if (phoneSprite) {
             phoneSprite.setX(this.char.body.x + 385);
+            phoneSprite.setDepth(6);
+        }
+
+        if (messageSprite)
+            messageSprite.setX(this.char.body.x + 385);
+
+        if (answer1)
+            answer1.setX(this.char.body.x + 385);
+
+        if (answer2)
+            answer2.setX(this.char.body.x + 385);
+
+        if (answer3)
+            answer3.setX(this.char.body.x + 385);
+
+        if (answer4)
+            answer4.setX(this.char.body.x + 385);
+
+        if (this.question)
+            this.question.setX(this.char.body.x + 307);
 
         this.boundPhone();
     }
@@ -140,43 +195,105 @@ export class GameScene extends Phaser.Scene {
      * Function which displays a notification by playing a sound and showing a message.
      */
     private notify() {
-
         // play sound
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
 
         // display message
-        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble");
+        this.phone.setQuestion('Een klasgenoot wordt gepest. Wat is de juiste actie?');
 
         setTimeout(function () {
             textBubble.destroy();
         }, 10000);
-
-    }
-
-    /**
-     * Let the phone appear on the screen
-     */
-    private togglePhone() {
-        if (this.phone)
-            this.phone.togglePhone(this.map.displayHeight);
     }
 
     /**
      * Let the phone appear on the screen
      */
     private boundPhone() {
-        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
+        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState()) {
             this.phone.togglePhone(this.map.displayHeight);
+            this.toggleQuestion(305);
+        }
     }
 
+    /**
+     * Toggle the question & answers
+     */
+    private toggleQuestion(displayHeight: number | undefined) {
+
+        //Stop player from moving
+        // this.char.setVelocityX(0);
+        this.char.body.moves = false
+
+        // Toggle the question
+        if (this.question)
+            this.question.y = (this.map.displayHeight + displayHeight - 35);
+        else {
+            this.question = this.add.text(this.char.body.x + 307, (this.map.displayHeight + displayHeight - 35), this.phone.getQuestion(), { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            this.question.setDepth(9);
+        }
+
+        // Toggle the answers
+        const answers = this.phone.getAnswers();
+
+        for (let i = 0; i < answers.length; i++) {
+            const sprite = this.phone.getAnswerSprite(i + 1);
+
+            if (sprite) {
+                sprite.setDepth(9);
+
+                const text = this.add.text(this.char.body.x + 307, sprite.y - 12, answers[i], { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                text.setDepth(10);
+
+                sprite.setInteractive().on('pointerdown', () => {
+
+                    if (!this.answerCorrect) {
+                        if (answers[i] === "Zoek hulp bij een leraar") {
+                            this.answerCorrect = true;
+
+                            text.setColor("green");
+
+                            const background = this.add.sprite(this.char.x - 100, this.game.canvas.height * 0.5, 'msg-background', 0);
+                            background.setScale(0.6);
+                            background.setDepth(15);
+
+                            const headerText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
+                            headerText.setDepth(16);
+
+                            const textMsg = "Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken.";
+
+                            const infoText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
+                            infoText.setDepth(16);
+
+                            const nextButton = this.add.sprite(this.char.x - 230, this.game.canvas.height * 0.6, 'volgende-button', 0);
+                            nextButton.setScale(0.65);
+                            nextButton.setDepth(16);
+
+                            nextButton.setInteractive().on('pointerdown', () => {
+                                this.scene.start('enterbuildingscene', { charX: this.char.x });
+                            });
+
+
+                        } else {
+                            text.setColor("red");
+                        }
+                    }
+
+                });
+            }
+
+        }
+
+    }
 
     /**
-     * Loads the mother 
+     * Loads the Bullies 
      */
     private loadBullies() {
 
-        // Add mother character to the scene
+        // Add bullied character to the scene
         this.bulliedChar = this.add.sprite(130, 485, 'bulliedBoy', 9); // -500 X-position  485 Y-postion
 
         this.bullyOne = this.add.sprite(90, 485, 'bully', 9); // -500 X-position  485 Y-postion
@@ -208,17 +325,15 @@ export class GameScene extends Phaser.Scene {
         if (!this.hasReceivedNotificationBullies && playerX + 250 > this.bullyOne.body.x) {
 
             this.hasReceivedNotificationBullies = true;
-            const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+            const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble");
 
             setTimeout(function () {
                 textBubble.destroy();
             }, 10000);
 
             this.notify();
-
         }
     }
-
     // private receiveNotificationMother() {
 
     //     const playerX = this.char.body.x;
