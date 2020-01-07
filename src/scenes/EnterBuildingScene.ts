@@ -12,9 +12,15 @@ export class EnterBuildingScene extends Phaser.Scene {
     private arrow: any;
     private canEnter: any;
 
+    private charX: number = 0;
+
     constructor() {
         super({ key: 'enterbuildingscene' });
         this.phone = new Phone();
+    }
+
+    init(data: any) {
+        this.charX = data.charX;
     }
 
     preload() {
@@ -52,6 +58,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Add character to the scene
         this.char = this.add.sprite(300, 485, characterName, 0);
+        this.char.x = this.charX;
         this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
