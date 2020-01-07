@@ -80,7 +80,7 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
-            this.scene.start('enterbuildingscene', { charX: 60 });
+            this.scene.start('gamescene', { charX: 60 });
         });
     }
 
