@@ -86,11 +86,35 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
-        phoneSprite.setDepth(1);
+        phoneSprite.setDepth(6);
 
         this.phone.setSprite(phoneSprite, .38, .38);
 
-        //Scene Diffrence
+        const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+        messageSprite.setDepth(7);
+
+        const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        const answerSprite2 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        const answerSprite3 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        const answerSprite4 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        this.phone.setQuestionSprite(messageSprite, .47, .30);
+
+        const answerHeight = .15;
+        this.phone.setAnswerSprite(1, answerSprite1, .47, answerHeight);
+        this.phone.setAnswerSprite(2, answerSprite2, .47, answerHeight);
+        this.phone.setAnswerSprite(3, answerSprite3, .47, answerHeight);
+        this.phone.setAnswerSprite(4, answerSprite4, .47, answerHeight);
+
+        //temp hide since we dont need
+        messageSprite.destroy();
+        answerSprite1.destroy();
+        answerSprite2.destroy();
+        answerSprite3.destroy();
+        answerSprite4.destroy();
 
 
         //Add arrow above Bon Bon Cafe
@@ -129,17 +153,17 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
-            this.togglePhone();
+            this.phone.togglePhone(this.map.displayHeight);
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
         const phoneSprite = this.phone.getSprite();
 
-        if (phoneSprite)
+        if (phoneSprite) {
             phoneSprite.setX(this.char.body.x + 385);
-
-        this.boundPhone();
+            phoneSprite.setDepth(6);
+        }
 
         // Play the animation for the pointing arrow
         this.arrow.anims.play('point', true);
@@ -176,21 +200,6 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     }
 
-    /**
-     * Let the phone appear on the screen
-     */
-    private togglePhone() {
-        if (this.phone)
-            this.phone.togglePhone(this.map.displayHeight);
-    }
-
-    /**
-     * Let the phone appear on the screen
-     */
-    private boundPhone() {
-        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
-            this.phone.togglePhone(this.map.displayHeight);
-    }
 
 
     private enterBuilding() {

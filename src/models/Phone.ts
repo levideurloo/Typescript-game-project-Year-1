@@ -53,6 +53,8 @@
 				this.isToggled = true;
 			}
 		}
+
+		
 		return height;
 	}
 

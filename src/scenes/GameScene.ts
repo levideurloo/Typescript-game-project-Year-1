@@ -110,12 +110,11 @@ export class GameScene extends Phaser.Scene {
         messageSprite.setDepth(7);
 
         const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-
         const answerSprite2 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-
         const answerSprite3 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
-
         const answerSprite4 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
+        //temp hide since we dont need
 
         this.phone.setSprite(phoneSprite, .38, .38);
         this.phone.setQuestionSprite(messageSprite, .47, .30);
