@@ -69,7 +69,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.anims.create({
             key: 'walk',
             repeat: -1,
-            frameRate: 10,
+            frameRate: 8,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
@@ -86,12 +86,12 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(90); // move right with 75 speed
+            this.char.body.setVelocityX(190); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-90) // move left with 75 speed
+            this.char.body.setVelocityX(-190) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -104,7 +104,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
             this.togglePhone();
 
-        this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
+        this.cameras.main.setBounds(-770, 0, this.map.displayWidth + 300, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
         const phoneSprite = this.phone.getSprite();
