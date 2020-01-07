@@ -332,7 +332,6 @@ export class GameScene extends Phaser.Scene {
             }, 10000);
 
             this.notify();
-
         }
     }
     // private receiveNotificationMother() {

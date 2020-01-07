@@ -14,6 +14,9 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     private charX: number = 0;
 
+    private whatsappSprite: any;
+    private receivedWhatsappNotification: boolean = false;
+
     constructor() {
         super({ key: 'enterbuildingscene' });
         this.phone = new Phone();
@@ -28,6 +31,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         //load in the map
         this.load.image('map', './assets/images/map.png');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+        this.load.image('whatsapp', './assets/images/whatsapp.png');
 
         const info = (this.game as Game).characterInfo;
 
@@ -86,6 +90,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
+
         phoneSprite.setDepth(6);
 
         this.phone.setSprite(phoneSprite, .38, .38);
@@ -116,11 +121,8 @@ export class EnterBuildingScene extends Phaser.Scene {
         answerSprite3.destroy();
         answerSprite4.destroy();
 
-
         //Add arrow above Bon Bon Cafe
         this.arrow = this.add.sprite(442, 445, 'arrow', 0);
-
-
 
         //Animate Floating Arrow
         this.anims.create({
@@ -152,8 +154,13 @@ export class EnterBuildingScene extends Phaser.Scene {
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar))
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.receivedWhatsappNotification && !this.phone.isToggled) {
             this.phone.togglePhone(this.map.displayHeight);
+            this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'whatsapp', 0).setDepth(7).setScale(0.5);
+            this.whatsappSprite.displayHeight = 350;
+            this.whatsappSprite.displayWidth = 190;
+            this.char.body.moves = false
+        }
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
@@ -162,7 +169,11 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         if (phoneSprite) {
             phoneSprite.setX(this.char.body.x + 385);
-            phoneSprite.setDepth(6);
+        }
+
+        if (this.whatsappSprite) {
+            this.whatsappSprite.setX(this.char.body.x + 385);
+
         }
 
         // Play the animation for the pointing arrow
@@ -176,6 +187,16 @@ export class EnterBuildingScene extends Phaser.Scene {
             this.canEnter = true;
         } else {
             this.canEnter = false;
+        }
+
+        const self = this;
+
+        if (!self.receivedWhatsappNotification) {
+            self.receivedWhatsappNotification = true;
+
+            setTimeout(function () {
+                self.notify();
+            }, 1500);
         }
 
         // Function that allow players to enter a building
@@ -200,12 +221,12 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     }
 
-
-
     private enterBuilding() {
-        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
+        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.receivedWhatsappNotification) {
             this.scene.start('bonboncafescene')
         }
     }
+
+
 }
 
