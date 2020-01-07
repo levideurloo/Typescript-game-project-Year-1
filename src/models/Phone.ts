@@ -1,4 +1,4 @@
- export class Phone {
+export class Phone {
 	public isToggled: boolean = false;
 	private sprite: Phaser.GameObjects.Sprite | undefined;
 	private questionSprite: Phaser.GameObjects.Sprite | undefined;
@@ -13,6 +13,7 @@
 		private question: string = ''
 	) {
 	}
+
 
 	/**
      *  Show/Hide the in-game phone
@@ -54,7 +55,7 @@
 			}
 		}
 
-		
+
 		return height;
 	}
 
@@ -140,5 +141,13 @@
 	public getAnswers() {
 		return this.answers;
 	}
+
+	public deleteAll() {
+		[this.answer1, this.answer2, this.answer3, this.answer4, this.questionSprite, this.sprite].forEach(element => {
+			if (element) element.destroy();
+		});
+	}
+
+
 
 }

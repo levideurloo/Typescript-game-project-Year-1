@@ -37,6 +37,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
         this.load.image('msg-background', './assets/images/msg-background.jpg');
         this.load.image('volgende-button', './assets/images/volgende-button.png');
+        this.load.image('phone_message', './assets/images/phone_message.png');
 
         // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
         // this.phoneMessage.scaleX = .20;
