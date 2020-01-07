@@ -16,6 +16,8 @@ export class GameScene extends Phaser.Scene {
     private bullyTwo: any;
     private bullyThree: any;
 
+    private answerCorrect: boolean = false;
+
     /**
      * Boolean to check MOTHER
      */
@@ -33,6 +35,9 @@ export class GameScene extends Phaser.Scene {
         this.load.image('map', './assets/images/map.png');
         this.load.image('bully-text', './assets/images/bully-text.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+        this.load.image('msg-background', './assets/images/msg-background.jpg');
+        this.load.image('volgende-button', './assets/images/volgende-button.png');
+
         // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
         // this.phoneMessage.scaleX = .20;
         // this.phoneMessage.scaleY = .20;
@@ -50,11 +55,10 @@ export class GameScene extends Phaser.Scene {
 
         this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 })
 
-        this.phone.addAnswer('Antwoord A');
-        this.phone.addAnswer('Antwoord B');
-        this.phone.addAnswer('Antwoord C');
-        this.phone.addAnswer('Antwoord D');
-
+        this.phone.addAnswer('Sla de pestkop in elkaar');
+        this.phone.addAnswer('Zoek hulp bij een leraar');
+        this.phone.addAnswer('Help de pesters');
+        this.phone.addAnswer('Doe niks');
     }
 
     create() {
@@ -65,7 +69,7 @@ export class GameScene extends Phaser.Scene {
         const characterName = info ? info.name : 'boy';
 
         // Add map to the scene
-        this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map")
+        this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map");
         this.map.displayWidth = 2500;
         this.map.displayHeight = this.game.canvas.height;
 
@@ -245,7 +249,41 @@ export class GameScene extends Phaser.Scene {
                 text.setDepth(10);
 
                 sprite.setInteractive().on('pointerdown', () => {
-                    alert(answers[i]);
+
+                    if (!this.answerCorrect) {
+                        if (answers[i] === "Zoek hulp bij een leraar") {
+                            this.answerCorrect = true;
+
+                            text.setColor("green");
+
+                            const background = this.add.sprite(this.char.x - 100, this.game.canvas.height * 0.5, 'msg-background', 0);
+                            background.setScale(0.6);
+                            background.setDepth(15);
+
+                            const headerText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
+                            headerText.setDepth(16);
+
+                            const textMsg = "Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken.";
+
+                            const infoText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
+                            infoText.setDepth(16);
+
+                            const nextButton = this.add.sprite(this.char.x - 230, this.game.canvas.height * 0.6, 'volgende-button', 0);
+                            nextButton.setScale(0.65);
+                            nextButton.setDepth(16);
+
+                            nextButton.setInteractive().on('pointerdown', () => {
+
+
+
+                            });
+
+
+                        } else {
+                            text.setColor("red");
+                        }
+                    }
+
                 });
             }
 
