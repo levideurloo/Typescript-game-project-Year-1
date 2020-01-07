@@ -188,7 +188,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     private enterBuilding() {
         if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
-            alert('Je bent naar binnen huts');
+            this.scene.start('bonboncafescene')
         }
     }
 }
