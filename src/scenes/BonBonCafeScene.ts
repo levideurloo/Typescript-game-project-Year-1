@@ -77,7 +77,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
         phoneSprite.setDepth(1);
 
-        this.phone.addSprite(phoneSprite, .38, .38);
+        this.phone.setSprite(phoneSprite, .38, .38);
     }
 
     update() {
