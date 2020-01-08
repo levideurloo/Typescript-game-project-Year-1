@@ -4,6 +4,8 @@ export class TitleScene extends Phaser.Scene {
 
     private selectedCharacterText: Phaser.GameObjects.Text | undefined;
     private music: Phaser.Sound.BaseSound | undefined;
+    private inputGroup: HTMLElement;
+    private inputName: HTMLInputElement;
 
     constructor() {
         super({
@@ -21,10 +23,15 @@ export class TitleScene extends Phaser.Scene {
                 ]
             }
         });
+
+        this.inputName = document.getElementById("inputName") as HTMLInputElement;
+        this.inputGroup = document.getElementById("inputGroup") as HTMLElement;
+
     }
 
     public preload() {
         // this.loadMusic();
+
     }
 
     public create() {
@@ -34,6 +41,8 @@ export class TitleScene extends Phaser.Scene {
         this.loadHelpButton();
         this.loadMutebutton();
         this.loadText();
+
+        this.inputGroup.style.display = 'block';
     }
 
     private loadTitle() {
@@ -73,13 +82,14 @@ export class TitleScene extends Phaser.Scene {
         startButton.setInteractive().on('pointerdown', () => {
 
             // Check if a character is selected
-            if (!(this.game as Game).characterInfo) {
+            if (!(this.game as Game).characterInfo || !this.inputName.value) {
                 // If not selected add following message to canvas ('Selecteer eerst je poppetje!')
-                const selectFirst = 'Selecteer eerst je poppetje!';
+                const selectFirst = 'Selecteer een poppetje & een naam!';
                 const addText = this.add.text(this.game.canvas.width / 2 - 100, 440, selectFirst, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '14px', color: 'white' });
                 return false;
             }
 
+            this.inputGroup.style.display = 'none';
             this.scene.start('gamescene', { charX: 60 });
         });
     }
