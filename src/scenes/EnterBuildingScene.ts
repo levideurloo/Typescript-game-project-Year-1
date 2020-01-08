@@ -12,6 +12,11 @@ export class EnterBuildingScene extends Phaser.Scene {
     private arrow: any;
     private canEnter: any;
 
+        /**
+     * Boolean to check if player has recieved control notification
+     */
+    private hasReceivedEntryControls: boolean = false;
+
     private charX: number = 0;
 
     private whatsappSprite: any;
@@ -39,6 +44,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         //load in the map
         this.load.image('map', './assets/images/map.png');
+        this.load.image('enterbuilding-bubble', './assets/images/enterbuilding-bubble.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
         this.load.image('whatsapp', './assets/images/whatsapp.png');
         this.load.image('next-btn', './assets/images/volgende-button.png');
@@ -321,6 +327,9 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Function that allow players to enter a building
         this.enterBuilding();
+
+        // Function that shows player the controls to aenter a building
+        this.showEntryControls();
     }
 
     /**
@@ -332,13 +341,24 @@ export class EnterBuildingScene extends Phaser.Scene {
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
 
-        // display message
-        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+    }
 
-        setTimeout(function () {
-            textBubble.destroy();
-        }, 10000);
+    private showEntryControls() {
+        // Get X coordinate from character
+        const playerX = this.char.body.x;
 
+        if (!this.hasReceivedEntryControls && playerX > 350) {
+        // Is player in reach && has message not been displayed yet
+
+            this.hasReceivedEntryControls = true;
+            const textBubble = this.add.image(this.char.body.x + 150, this.char.body.y - 50, "enterbuilding-bubble")
+            
+            setTimeout(function () {
+                textBubble.destroy();
+            }, 10000);
+            this.notify();
+
+        }
     }
 
     private enterBuilding() {
