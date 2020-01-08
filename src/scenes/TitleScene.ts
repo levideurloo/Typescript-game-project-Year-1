@@ -89,9 +89,16 @@ export class TitleScene extends Phaser.Scene {
                 return false;
             }
 
+            //set name
+            (this.game as Game).chosenName = this.inputName.value;
+
+            //hide input
             this.inputGroup.style.display = 'none';
+
             this.scene.start('gamescene', { charX: 60 });
         });
+
+
     }
 
     /**

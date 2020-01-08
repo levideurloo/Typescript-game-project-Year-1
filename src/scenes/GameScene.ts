@@ -16,6 +16,8 @@ export class GameScene extends Phaser.Scene {
     private bullyTwo: any;
     private bullyThree: any;
 
+    private nametag: any;
+
     private answerCorrect: boolean = false;
 
     /**
@@ -79,6 +81,11 @@ export class GameScene extends Phaser.Scene {
 
         // Add character to the scene
         this.char = this.add.sprite(-600, 485, characterName, 0);
+
+        //add nametag
+
+
+
         this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
@@ -87,6 +94,13 @@ export class GameScene extends Phaser.Scene {
         this.char.body.onWorldBounds = true;
 
         this.physics.add.existing(this.char);
+
+        const chosenName = (this.game as Game).chosenName;
+
+        if (chosenName) {
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag.setDepth(5);
+        }
 
         // Animates the idle state of the character
         this.anims.create({
@@ -188,6 +202,11 @@ export class GameScene extends Phaser.Scene {
 
         if (this.question)
             this.question.setX(this.char.body.x + 307);
+
+
+        if (this.nametag) {
+            this.nametag.setX(this.char.x - 30);
+        }
 
         this.boundPhone();
     }

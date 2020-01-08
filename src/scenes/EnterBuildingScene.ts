@@ -12,9 +12,9 @@ export class EnterBuildingScene extends Phaser.Scene {
     private arrow: any;
     private canEnter: any;
 
-        /**
-     * Boolean to check if player has recieved control notification
-     */
+    /**
+ * Boolean to check if player has recieved control notification
+ */
     private hasReceivedEntryControls: boolean = false;
 
     private charX: number = 0;
@@ -29,6 +29,8 @@ export class EnterBuildingScene extends Phaser.Scene {
     private answerSprite4: any;
 
     private answerCorrect: boolean = false;
+
+    private nametag: any;
 
 
     constructor() {
@@ -141,6 +143,13 @@ export class EnterBuildingScene extends Phaser.Scene {
         answerSprite2.destroy();
         answerSprite3.destroy();
         answerSprite4.destroy();
+
+        const chosenName = (this.game as Game).chosenName;
+
+        if (chosenName) {
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag.setDepth(5);
+        }
 
         //Add arrow above Bon Bon Cafe
         this.arrow = this.add.sprite(442, 445, 'arrow', 0);
@@ -330,6 +339,12 @@ export class EnterBuildingScene extends Phaser.Scene {
 
         // Function that shows player the controls to aenter a building
         this.showEntryControls();
+
+        
+
+        if (this.nametag) {
+            this.nametag.setX(this.char.x - 30);
+        }
     }
 
     /**
@@ -348,11 +363,11 @@ export class EnterBuildingScene extends Phaser.Scene {
         const playerX = this.char.body.x;
 
         if (!this.hasReceivedEntryControls && playerX > 350) {
-        // Is player in reach && has message not been displayed yet
+            // Is player in reach && has message not been displayed yet
 
             this.hasReceivedEntryControls = true;
             const textBubble = this.add.image(this.char.body.x + 150, this.char.body.y - 50, "enterbuilding-bubble")
-            
+
             setTimeout(function () {
                 textBubble.destroy();
             }, 10000);
