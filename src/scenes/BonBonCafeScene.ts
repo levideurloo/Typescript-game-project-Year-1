@@ -28,6 +28,9 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
+
+        // Load in the background music
+        this.load.audio('music', './assets/audio/NGGUU.mp3');
     }
 
     create() {
@@ -78,6 +81,10 @@ export class BonBonCafeScene extends Phaser.Scene {
         phoneSprite.setDepth(1);
 
         this.phone.addSprite(phoneSprite, .38, .38);
+
+        // Plays Never Gonna Give You Up 8Bit on entry
+        let backgroundMusic = this.sound.add('music');
+        backgroundMusic.play();
     }
 
     update() {
@@ -112,7 +119,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
 
-        this.boundPhone();
+        this.boundPhone(); 
 
     }
 
