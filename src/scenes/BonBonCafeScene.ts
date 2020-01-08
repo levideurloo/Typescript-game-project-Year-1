@@ -24,6 +24,7 @@ export class BonBonCafeScene extends Phaser.Scene {
     private answerSprite2: any;
     private answerSprite3: any;
     private answerSprite4: any;
+    private nametag: any;
 
     private answerCorrect: boolean = false;
 
@@ -150,7 +151,12 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.physics.world.enableBody(this.bulliedChar);
 
         // Shows the bullied characters message when in range
+        const chosenName = (this.game as Game).chosenName;
 
+        if (chosenName) {
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag.setDepth(5);
+        }
     }
 
     update() {
@@ -262,7 +268,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                                         answer3.destroy();
                                         answer4.destroy();
                                         messageText.destroy();
-                                        self.phone.deleteAll();                                        
+                                        self.phone.deleteAll();
                                         self.char.body.moves = true;
                                     });
 
@@ -272,7 +278,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                             }
                         });
                     }, self);
-                    
+
                 });
 
 
@@ -280,7 +286,7 @@ export class BonBonCafeScene extends Phaser.Scene {
 
             this.whatsappSprite.displayHeight = 350;
             this.whatsappSprite.displayWidth = 190;
-            
+
         }
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
@@ -307,6 +313,11 @@ export class BonBonCafeScene extends Phaser.Scene {
 
         }
 
+
+
+        if (this.nametag) {
+            this.nametag.setX(this.char.x - 30);
+        }
     }
 
     /**
