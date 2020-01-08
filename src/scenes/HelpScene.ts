@@ -40,10 +40,10 @@ export class HelpScene extends Phaser.Scene {
 
   private loadText() {
     //Define what text is
-    const text = 'Spatie: hiermee opent je telefoon waar je notificaties op krijgt\nLinker pijltoets: hiermee loopt je poppetje naar links op de map.\nRechter pijltoets: hiermee loopt je poppetje naar rechts op de map.\n\n\nKlik op het kruisje links onderin om weer terug te gaan naar het spel.';
+    const text = 'Spatie: hiermee opent je telefoon waar je notificaties op krijgt\nEnter: hiermee kun je een gebouw betreden\nLinker pijltoets: hiermee loopt je poppetje naar links op de map.\nRechter pijltoets: hiermee loopt je poppetje naar rechts op de map.\n\n\nKlik op het kruisje links onderin om weer terug te gaan naar het spel.';
     
     //Add text to canvas
-    const addText = this.add.text(200, this.game.canvas.height / 3, text, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '16px', color: 'white' });
+    const addText = this.add.text(200, this.game.canvas.height / 3, text, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '16px', color: 'white'});
   }
 
 }
