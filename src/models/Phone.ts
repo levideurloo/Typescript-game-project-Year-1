@@ -55,7 +55,6 @@ export class Phone {
 			}
 		}
 
-
 		return height;
 	}
 
@@ -119,15 +118,6 @@ export class Phone {
 
 	public setQuestion(question: string) {
 		this.question = question;
-
-		// if (this.questionText) {
-		// 	this.questionText.text = question;
-		// 	this.questionText.style.fontFamily = 'Verdana, "Times New Roman", Tahoma, serif';
-		// 	this.questionText.style.fontSize = '12px';
-		// 	this.questionText.style.color = 'black';
-		// 	this.questionText.style.setWordWrapWidth(170);
-		// 	this.questionText.setDepth(3);
-		// }
 	}
 
 	public getQuestion(): string {
