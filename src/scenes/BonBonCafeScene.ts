@@ -30,6 +30,8 @@ export class BonBonCafeScene extends Phaser.Scene {
     private backgroundMusic: any;
     private answerCorrect: boolean = false;
 
+    private hasPlayedBulliedBoyLeaveAnimation: boolean = false;
+
     constructor() {
         super({ key: 'bonboncafescene' });
         this.phone = new Phone();
@@ -264,6 +266,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                                         messageText.destroy();
                                         self.phone.deleteAll();
                                         self.char.body.moves = true;
+
                                         if (!self.hasAnwsered == true) {
                                             //Add arrow above Bon Bon Cafe
                                             self.arrow = self.add.sprite(-575, 300, 'arrow', 0);
@@ -276,11 +279,11 @@ export class BonBonCafeScene extends Phaser.Scene {
                                                 frameRate: 30,
                                                 frames: self.anims.generateFrameNumbers('arrow', { start: 0, end: 19 })
                                             });
-                                        self.hasAnwsered = true;
+                                            self.hasAnwsered = true;
                                         };
                                         self.arrow.anims.play('point', true);
                                         self.arrow.angle = 90;
-                                        
+
                                     });
 
                                 } else {
@@ -320,7 +323,21 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (this.char.body.x > this.bulliedChar.body.x - 200) {
             this.showBulliedMessage();
 
+            //can play leave animation?
+            if (this.hasAnwsered && !this.hasPlayedBulliedBoyLeaveAnimation && this.bullyTextBubble) {
+
+                this.hasPlayedBulliedBoyLeaveAnimation = true;
+                const self = this;
+
+                // setTimeout(() => {
+                this.bullyTextBubble.destroy();
+
+                // }, 1);
+            }
+
         }
+
+
 
         // Leave the building
         this.leaveBuilding();
@@ -350,13 +367,12 @@ export class BonBonCafeScene extends Phaser.Scene {
 
     private showBulliedMessage() {
         // Adds the text bubble
-        const bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
-
+        this.bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
         this.isInRange = true;
     }
 
     private canExit() {
-     return this.char.body.x < -475;
+        return this.char.body.x < -475;
     }
 
     private leaveBuilding() {
