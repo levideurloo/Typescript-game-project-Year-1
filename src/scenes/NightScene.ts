@@ -7,9 +7,7 @@ export class NightScene extends Phaser.Scene {
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
-
-    private whatsappSprite: any;
-    private whatsappNextSprite: any;
+    
     private conversationStarted: boolean = false;
     private notified: boolean = false;
 
@@ -141,105 +139,90 @@ export class NightScene extends Phaser.Scene {
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.notified && !this.phone.isToggled) {
             this.phone.togglePhone(this.map.displayHeight);
-            this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'whatsapp', 0).setDepth(7).setScale(0.5);
 
             const self = this;
 
-            setTimeout(function () {
+            const x = self.char.body.x + 385;
 
-                self.whatsappNextSprite = self.add.sprite(0, self.map.displayHeight - 40, 'next-btn', 0).setDepth(7).setScale(0.5);
-                self.whatsappNextSprite.setScale(0.5);
-                self.whatsappNextSprite.setDepth(16);
+            const messageSprite = self.add.sprite(x, self.map.displayHeight / 2 - 10, 'phone_message', 0);
+            self.answerSprite1 = self.add.sprite(x, self.map.displayHeight / 2 + 50, 'phone_message', 0);
+            self.answerSprite2 = self.add.sprite(x, self.map.displayHeight / 2 + 90, 'phone_message', 0);
+            self.answerSprite3 = self.add.sprite(x, self.map.displayHeight / 2 + 130, 'phone_message', 0);
+            self.answerSprite4 = self.add.sprite(x, self.map.displayHeight / 2 + 170, 'phone_message', 0);
 
-                self.whatsappNextSprite.setInteractive().on('pointerdown', () => {
+            messageSprite.setDepth(100);
+            self.answerSprite1.setDepth(100);
+            self.answerSprite2.setDepth(100);
+            self.answerSprite3.setDepth(100);
+            self.answerSprite4.setDepth(100);
 
-                    self.whatsappSprite.destroy();
-                    self.whatsappNextSprite.destroy();
+            self.phone.setQuestionSprite(messageSprite, .47, .30);
 
-                    const x = self.char.body.x + 385;
+            const answerHeight = .15;
+            self.phone.setAnswerSprite(1, self.answerSprite1, .47, (answerHeight * 1.5));
+            self.phone.setAnswerSprite(2, self.answerSprite2, .47, answerHeight);
+            self.phone.setAnswerSprite(3, self.answerSprite3, .47, answerHeight);
+            self.phone.setAnswerSprite(4, self.answerSprite4, .47, answerHeight);
 
-                    const messageSprite = self.add.sprite(x, self.map.displayHeight / 2 - 10, 'phone_message', 0);
-                    self.answerSprite1 = self.add.sprite(x, self.map.displayHeight / 2 + 50, 'phone_message', 0);
-                    self.answerSprite2 = self.add.sprite(x, self.map.displayHeight / 2 + 90, 'phone_message', 0);
-                    self.answerSprite3 = self.add.sprite(x, self.map.displayHeight / 2 + 130, 'phone_message', 0);
-                    self.answerSprite4 = self.add.sprite(x, self.map.displayHeight / 2 + 170, 'phone_message', 0);
+            const messageText = self.add.text(x - 80, self.map.displayHeight / 2 - 40, "Wat raadt je het meisje aan om te doen?", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
-                    messageSprite.setDepth(100);
-                    self.answerSprite1.setDepth(100);
-                    self.answerSprite2.setDepth(100);
-                    self.answerSprite3.setDepth(100);
-                    self.answerSprite4.setDepth(100);
+            const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 25, "Melding maken bij de politie", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 75, "Ex-vriendje bedreigen", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 115, "Ex-vriendje uitschelden", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 155, "Vriendinnen inlichten", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
-                    self.phone.setQuestionSprite(messageSprite, .47, .30);
+            messageText.setDepth(101);
 
-                    const answerHeight = .15;
-                    self.phone.setAnswerSprite(1, self.answerSprite1, .47, (answerHeight * 1.5));
-                    self.phone.setAnswerSprite(2, self.answerSprite2, .47, answerHeight);
-                    self.phone.setAnswerSprite(3, self.answerSprite3, .47, answerHeight);
-                    self.phone.setAnswerSprite(4, self.answerSprite4, .47, answerHeight);
+            answer1.setDepth(101);
+            answer2.setDepth(101);
+            answer3.setDepth(101);
+            answer4.setDepth(101);
 
-                    const messageText = self.add.text(x - 80, self.map.displayHeight / 2 - 40, "Wat raadt je het meisje aan om te doen?", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+            [answer1, answer2, answer3, answer4].forEach(function (element) {
+                element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
-                    const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 25, "Melding maken bij de politie", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 75, "Ex-vriendje bedreigen", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 115, "Ex-vriendje uitschelden", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 155, "Vriendinnen inlichten", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    if (!self.answerCorrect) {
+                        if (element.text === "Melding maken bij de politie") {
+                            element.setColor("green");
 
-                    messageText.setDepth(101);
+                            const background = self.add.sprite(self.char.x - 100, self.game.canvas.height * 0.5, 'msg-background', 0);
+                            background.setScale(0.6);
+                            background.setDepth(15);
 
-                    answer1.setDepth(101);
-                    answer2.setDepth(101);
-                    answer3.setDepth(101);
-                    answer4.setDepth(101);
+                            const headerText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
+                            headerText.setDepth(16);
 
-                    [answer1, answer2, answer3, answer4].forEach(function (element) {
-                        element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
+                            const textMsg = "Om fotos van internet te verwijderen die daar onbedoeld zijn gekomen heb je de politie nodig.";
 
-                            if (!self.answerCorrect) {
-                                if (element.text === "Melding maken bij de politie") {
-                                    element.setColor("green");
+                            const infoText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
+                            infoText.setDepth(16);
 
-                                    const background = self.add.sprite(self.char.x - 100, self.game.canvas.height * 0.5, 'msg-background', 0);
-                                    background.setScale(0.6);
-                                    background.setDepth(15);
+                            const nextButton = self.add.sprite(self.char.x - 230, self.game.canvas.height * 0.6, 'next-btn', 0);
+                            nextButton.setScale(0.65);
+                            nextButton.setDepth(16);
 
-                                    const headerText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
-                                    headerText.setDepth(16);
-
-                                    const textMsg = "Om fotos van internet te verwijderen die daar onbedoeld zijn gekomen heb je de politie nodig.";
-
-                                    const infoText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
-                                    infoText.setDepth(16);
-
-                                    const nextButton = self.add.sprite(self.char.x - 230, self.game.canvas.height * 0.6, 'next-btn', 0);
-                                    nextButton.setScale(0.65);
-                                    nextButton.setDepth(16);
-
-                                    nextButton.setInteractive().on('pointerdown', () => {
-                                        background.destroy();
-                                        headerText.destroy();
-                                        infoText.destroy();
-                                        nextButton.destroy();
-                                        answer1.destroy();
-                                        answer2.destroy();
-                                        answer3.destroy();
-                                        answer4.destroy();
-                                        messageText.destroy();
-                                        self.phone.deleteAll();
-                                        self.answerCorrect = true;
-                                        self.sextingBubble.destroy();
-                                        self.thankPlayer();
-                                    });
-                                } else
-                                    element.setColor("red");
-                            }
-                        });
-                    }, self);
+                            nextButton.setInteractive().on('pointerdown', () => {
+                                background.destroy();
+                                headerText.destroy();
+                                infoText.destroy();
+                                nextButton.destroy();
+                                answer1.destroy();
+                                answer2.destroy();
+                                answer3.destroy();
+                                answer4.destroy();
+                                messageText.destroy();
+                                self.phone.deleteAll();
+                                self.answerCorrect = true;
+                                self.sextingBubble.destroy();
+                                self.thankPlayer();
+                            });
+                        } else
+                            element.setColor("red");
+                    }
                 });
-            }, 10);
+            }, self);
 
-            this.whatsappSprite.displayHeight = 350;
-            this.whatsappSprite.displayWidth = 190;
+
             this.char.body.moves = false
         }
 
@@ -250,12 +233,6 @@ export class NightScene extends Phaser.Scene {
 
         if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
-
-        if (this.whatsappSprite)
-            this.whatsappSprite.setX(this.char.body.x + 385);
-
-        if (this.whatsappNextSprite)
-            this.whatsappNextSprite.setX(this.char.body.x + 385);
 
         if (this.nametag)
             this.nametag.setX(this.char.x - 18);
@@ -372,7 +349,7 @@ export class NightScene extends Phaser.Scene {
 
     private thankPlayer() {
         const thanksBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-thanks");
-        thanksBubble.visible = false; 
+        thanksBubble.visible = false;
 
         this.snapchatGirl.anims.play('idleGirl', true);
         this.snapchatGirl.body.setVelocityX(0);
