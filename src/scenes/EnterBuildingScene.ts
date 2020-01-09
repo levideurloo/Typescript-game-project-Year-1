@@ -31,7 +31,7 @@ export class EnterBuildingScene extends Phaser.Scene {
     private answerCorrect: boolean = false;
 
     private nametag: any;
-
+    private textbubble: any;
 
     constructor() {
         super({ key: 'enterbuildingscene' });
@@ -319,7 +319,14 @@ export class EnterBuildingScene extends Phaser.Scene {
 
             setTimeout(function () {
                 self.notify();
-            }, 1500);
+
+                self.textbubble = self.add.image(self.char.body.x + 100, self.char.body.y - 50, "notification-textbubble");
+
+            }, 2000);
+        }
+
+        if (this.answerCorrect) {
+            this.textbubble.destroy();
         }
 
         // Function that allow players to enter a building
@@ -328,10 +335,10 @@ export class EnterBuildingScene extends Phaser.Scene {
         // Function that shows player the controls to aenter a building
         this.showEntryControls();
 
-        
+
 
         if (this.nametag) {
-            this.nametag.setX(this.char.x -18);
+            this.nametag.setX(this.char.x - 18);
         }
     }
 
@@ -365,7 +372,7 @@ export class EnterBuildingScene extends Phaser.Scene {
     }
 
     private enterBuilding() {
-        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.receivedWhatsappNotification) {
+        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect) {
             this.scene.start('bonboncafescene')
         }
     }
