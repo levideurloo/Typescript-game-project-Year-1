@@ -100,6 +100,7 @@ export class Preloader extends Phaser.Scene {
     }
 
     private loadImages() {
+        this.load.image('classchat', './assets/images/classchat.png');
         this.load.image('whatsapp', './assets/images/whatsapp.png');
         this.load.image('next-btn', './assets/images/volgende-button.png');
         this.load.image('msg-background', './assets/images/msg-background.jpg');
