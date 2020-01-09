@@ -95,7 +95,7 @@ export class TitleScene extends Phaser.Scene {
             //hide input
             this.inputGroup.style.display = 'none';
 
-            this.scene.start('nightscene', { charX: 60 });
+            this.scene.start('gamescene', { charX: 60 });
         });
 
 
