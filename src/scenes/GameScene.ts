@@ -41,12 +41,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('volgende-button', './assets/images/volgende-button.png');
         this.load.image('phone_message', './assets/images/phone_message.png');
 
-        // this.phoneMessage = this.load.spritesheet('phone-message', './assets/images/phone_message.png', { frameWidth: 600, frameHeight: 300,  });
-        // this.phoneMessage.scaleX = .20;
-        // this.phoneMessage.scaleY = .20;
-
         const info = (this.game as Game).characterInfo;
-
 
         //load character 
         if (info) {
@@ -293,6 +288,7 @@ export class GameScene extends Phaser.Scene {
 
                             nextButton.setInteractive().on('pointerdown', () => {
                                 this.scene.start('enterbuildingscene', { charX: this.char.x });
+                                // this.scene.start('nightscene');
                             });
 
 

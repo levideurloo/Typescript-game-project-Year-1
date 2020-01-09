@@ -1,5 +1,3 @@
-import { Game } from "../models/Game";
-
 export class HelpScene extends Phaser.Scene {
 
   constructor() {
