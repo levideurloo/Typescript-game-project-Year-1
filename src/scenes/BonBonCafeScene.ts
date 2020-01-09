@@ -301,7 +301,7 @@ export class BonBonCafeScene extends Phaser.Scene {
             this.whatsappSprite.displayWidth = 190;
         }
 
-        this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
+        this.cameras.main.setBounds(-770, 0, this.map.displayWidth + 100, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
         const phoneSprite = this.phone.getSprite();
