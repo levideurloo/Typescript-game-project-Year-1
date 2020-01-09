@@ -9,7 +9,6 @@ export class GameScene extends Phaser.Scene {
     private cursorKeys: any;
     private spaceBar: any;
     private map: any;
-    private mother: any;
 
     private bulliedChar: any;
     private bullyOne: any;
@@ -32,24 +31,12 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        //load in the map
-        this.load.image('map', './assets/images/map.png');
-        this.load.image('bully-text', './assets/images/bully-text.gif');
-        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
-        this.load.image('msg-background', './assets/images/msg-background.jpg');
-        this.load.image('volgende-button', './assets/images/volgende-button.png');
-        
         const info = (this.game as Game).characterInfo;
 
         //load character 
         if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
-
-        // load bully character
-        this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 })
-
-        this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 })
 
         this.phone.addAnswer('Sla de pestkop in elkaar');
         this.phone.addAnswer('Zoek hulp bij een leraar');
@@ -280,16 +267,13 @@ export class GameScene extends Phaser.Scene {
                             const infoText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
                             infoText.setDepth(16);
 
-                            const nextButton = this.add.sprite(this.char.x - 230, this.game.canvas.height * 0.6, 'volgende-button', 0);
+                            const nextButton = this.add.sprite(this.char.x - 230, this.game.canvas.height * 0.6, 'next-btn', 0);
                             nextButton.setScale(0.65);
                             nextButton.setDepth(16);
 
                             nextButton.setInteractive().on('pointerdown', () => {
                                 this.scene.start('enterbuildingscene', { charX: this.char.x });
-                                // this.scene.start('nightscene');
                             });
-
-
                         } else {
                             text.setColor("red");
                         }
@@ -348,16 +332,4 @@ export class GameScene extends Phaser.Scene {
             this.notify();
         }
     }
-    // private receiveNotificationMother() {
-
-    //     const playerX = this.char.body.x;
-    //     const motherX = this.mother.body.x
-    //     const notificaitonX = motherX + 780;
-
-    //     if (!this.hasReceivedNotificationMother && playerX > notificaitonX) {
-    //         this.hasReceivedNotificationMother = true;
-    //         this.notify();
-    //     }
-    // }
-
 }

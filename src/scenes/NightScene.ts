@@ -32,26 +32,11 @@ export class NightScene extends Phaser.Scene {
     }
 
     preload() {
-        //load in the map
-        this.load.image('map-night', './assets/images/map-night.png');
-        this.load.image('flits-bubble', './assets/images/flits-bubble.png');
-        this.load.image('bully-bubble', './assets/images/bully-bubble.png');
-        this.load.image('sexting-bubble', './assets/images/sexting-bubble.png');
-        this.load.image('sexting-thanks', './assets/images/sexting-thanks.png');
-        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
-        this.load.image('whatsapp', './assets/images/whatsapp.png');
-        this.load.image('next-btn', './assets/images/volgende-button.png');
-        this.load.image('msg-background', './assets/images/msg-background.jpg');
-
         const info = (this.game as Game).characterInfo;
 
         //load character 
         if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-
-        // Load scene characters
-        this.load.spritesheet('snapchatGirl', './assets/spritesheets/girl.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('oldBoyFriend', './assets/spritesheets/boy.png', { frameWidth: 64, frameHeight: 64 });
     }
 
     create() {
@@ -285,9 +270,6 @@ export class NightScene extends Phaser.Scene {
 
         if (this.notified && this.answerCorrect == false)
             this.walkingGirl();
-
-        // if (this.notified && this.answerCorrect && this.sextingBubble)
-        //     this.thankPlayer();
     }
 
     /**

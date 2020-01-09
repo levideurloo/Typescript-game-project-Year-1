@@ -6,14 +6,12 @@ export class Phone {
 	private answer2: Phaser.GameObjects.Sprite | undefined;
 	private answer3: Phaser.GameObjects.Sprite | undefined;
 	private answer4: Phaser.GameObjects.Sprite | undefined;
-	// private questionText: Phaser.GameObjects.Text | undefined;
 
 	constructor(
 		private answers: string[] = [],
 		private question: string = ''
 	) {
 	}
-
 
 	/**
      *  Show/Hide the in-game phone
@@ -137,7 +135,4 @@ export class Phone {
 			if (element) element.destroy();
 		});
 	}
-
-
-
 }

@@ -34,10 +34,6 @@ export class BonBonCafeScene extends Phaser.Scene {
     }
 
     preload() {
-
-        // Load in the Bon Bon Cafe map
-        this.load.image('cafe', './assets/images/cafe.png');
-
         // Recieves character info from selection screen
         const info = (this.game as Game).characterInfo;
 
@@ -45,20 +41,11 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
-
-        // Load bullied character
-        this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 })
-
-        // Load bullied characters text bubble
-        this.load.image('bullied-bubble', './assets/images/onlinegepest-bubble.gif');
-
         // Load in the background music
         this.load.audio('music', './assets/audio/NGGUU.mp3');
 
         // Load in the phone chat and button parts
         this.load.image('whatsapp', './assets/images/classchat.png');
-        this.load.image('next-btn', './assets/images/volgende-button.png');
-        this.load.image('msg-background', './assets/images/msg-background.jpg');
 
         // Add anwsers to the phone
         this.phone.addAnswer('Sla de pestkop in elkaar');

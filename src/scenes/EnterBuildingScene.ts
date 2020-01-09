@@ -43,24 +43,12 @@ export class EnterBuildingScene extends Phaser.Scene {
     }
 
     preload() {
-
-        //load in the map
-        this.load.image('map', './assets/images/map.png');
-        this.load.image('enterbuilding-bubble', './assets/images/enterbuilding-bubble.gif');
-        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
-        this.load.image('whatsapp', './assets/images/whatsapp.png');
-        this.load.image('next-btn', './assets/images/volgende-button.png');
-        this.load.image('msg-background', './assets/images/msg-background.jpg');
-
         const info = (this.game as Game).characterInfo;
 
         //load character 
         if (info) {
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
         }
-
-        // Load pointing arrow spritesheet
-        this.load.spritesheet('arrow', './assets/spritesheets/arrow.png', { frameWidth: 28, frameHeight: 21 })
 
         this.phone.addAnswer('Sla de pestkop in elkaar');
         this.phone.addAnswer('Zoek hulp bij een leraar');
