@@ -13,6 +13,7 @@ export class BonBonCafeScene extends Phaser.Scene {
     private bulliedChar: any;
     private isInRange: boolean = false;
     private bullyTextBubble: any;
+    private hasAnwsered: boolean = false;
 
     private charX: number = 0;
 
@@ -147,6 +148,7 @@ export class BonBonCafeScene extends Phaser.Scene {
             this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 100, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
+
     }
 
     update() {
@@ -171,6 +173,8 @@ export class BonBonCafeScene extends Phaser.Scene {
 
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.isInRange == true && !this.phone.isToggled) {
+            this.char.body.moves = false;
+
             this.phone.togglePhone(this.map.displayHeight);
             this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'classchat', 0).setDepth(7).setScale(0.5);
 
@@ -260,6 +264,23 @@ export class BonBonCafeScene extends Phaser.Scene {
                                         messageText.destroy();
                                         self.phone.deleteAll();
                                         self.char.body.moves = true;
+                                        if (!self.hasAnwsered == true) {
+                                            //Add arrow above Bon Bon Cafe
+                                            self.arrow = self.add.sprite(-575, 300, 'arrow', 0);
+                                            self.arrow.setScale(4);
+
+                                            //Animate Floating Arrow
+                                            self.anims.create({
+                                                key: 'point',
+                                                repeat: -1,
+                                                frameRate: 30,
+                                                frames: self.anims.generateFrameNumbers('arrow', { start: 0, end: 19 })
+                                            });
+                                        self.hasAnwsered = true;
+                                        };
+                                        self.arrow.anims.play('point', true);
+                                        self.arrow.angle = 90;
+                                        
                                     });
 
                                 } else {
@@ -327,33 +348,19 @@ export class BonBonCafeScene extends Phaser.Scene {
 
     }
 
-    /**
-     * Let the phone appear on the screen
-     */
-    private togglePhone() {
-        if (this.phone)
-            this.phone.togglePhone(this.map.displayHeight);
-    }
-
-    /**
-     * Let the phone appear on the screen
-     */
-    private boundPhone() {
-        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
-            this.phone.togglePhone(this.map.displayHeight);
-    }
-
     private showBulliedMessage() {
         // Adds the text bubble
         const bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
 
         this.isInRange = true;
-        // Stop player from moving
-        this.char.body.moves = false;
+    }
+
+    private canExit() {
+     return this.char.body.x < -475;
     }
 
     private leaveBuilding() {
-        if (this.answerCorrect && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
+        if (this.answerCorrect && this.canExit() && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
             this.backgroundMusic.stop();
             this.scene.start('nightscene');
         }
