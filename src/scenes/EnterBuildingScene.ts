@@ -135,7 +135,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
 
@@ -331,7 +331,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         
 
         if (this.nametag) {
-            this.nametag.setX(this.char.x - 30);
+            this.nametag.setX(this.char.x -18);
         }
     }
 

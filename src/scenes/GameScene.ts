@@ -62,10 +62,6 @@ export class GameScene extends Phaser.Scene {
         // Add character to the scene
         this.char = this.add.sprite(-600, 485, characterName, 0);
 
-        //add nametag
-
-
-
         this.char.flipX = true;
         this.physics.world.enableBody(this.char);
 
@@ -78,7 +74,7 @@ export class GameScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x -18, this.char.body.y - 40, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
 
@@ -127,12 +123,12 @@ export class GameScene extends Phaser.Scene {
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(275); // move right with 75 speed
+            this.char.body.setVelocityX(75); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
 
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-275) // move left with 75 speed
+            this.char.body.setVelocityX(-75) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
 
@@ -185,7 +181,7 @@ export class GameScene extends Phaser.Scene {
 
 
         if (this.nametag) {
-            this.nametag.setX(this.char.x - 30);
+            this.nametag.setX(this.char.x - 18);
         }
 
         this.boundPhone();

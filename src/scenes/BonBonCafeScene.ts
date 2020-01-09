@@ -26,6 +26,7 @@ export class BonBonCafeScene extends Phaser.Scene {
     private answerSprite4: any;
     private nametag: any;
 
+    private backgroundMusic: any;
     private answerCorrect: boolean = false;
 
     constructor() {
@@ -98,8 +99,8 @@ export class BonBonCafeScene extends Phaser.Scene {
         });
 
         // Plays Never Gonna Give You Up 8Bit on entry
-        let backgroundMusic = this.sound.add('music');
-        backgroundMusic.play();
+        this.backgroundMusic = this.sound.add('music');
+        this.backgroundMusic.play();
 
 
         // Create the in-game phone
@@ -350,7 +351,9 @@ export class BonBonCafeScene extends Phaser.Scene {
     }
 
     private leaveBuilding() {
-        if (this.answerCorrect && Phaser.Input.Keyboard.JustDown(this.enterKey))
-            this.scene.start('nightscene')
+        if (this.answerCorrect && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
+            this.backgroundMusic.stop();
+            this.scene.start('nightscene');
+        }
     }
 }

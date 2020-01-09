@@ -116,7 +116,7 @@ export class NightScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 18, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
     }
@@ -230,17 +230,12 @@ export class NightScene extends Phaser.Scene {
                                         self.sextingBubble.destroy();
                                         self.thankPlayer();
                                     });
-
-                                } else {
+                                } else
                                     element.setColor("red");
-                                }
                             }
                         });
                     }, self);
-
                 });
-
-
             }, 10);
 
             this.whatsappSprite.displayHeight = 350;
@@ -263,7 +258,7 @@ export class NightScene extends Phaser.Scene {
             this.whatsappNextSprite.setX(this.char.body.x + 385);
 
         if (this.nametag)
-            this.nametag.setX(this.char.x - 30);
+            this.nametag.setX(this.char.x - 18);
 
         if (this.char.body.x > 640 && this.conversationStarted == false)
             this.showConversation();
