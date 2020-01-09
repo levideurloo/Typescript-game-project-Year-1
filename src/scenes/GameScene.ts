@@ -32,15 +32,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload() {
-
         //load in the map
         this.load.image('map', './assets/images/map.png');
         this.load.image('bully-text', './assets/images/bully-text.gif');
         this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
         this.load.image('msg-background', './assets/images/msg-background.jpg');
         this.load.image('volgende-button', './assets/images/volgende-button.png');
-        this.load.image('phone_message', './assets/images/phone_message.png');
-
+        
         const info = (this.game as Game).characterInfo;
 
         //load character 

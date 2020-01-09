@@ -10,6 +10,7 @@ export class NightScene extends Phaser.Scene {
 
     private whatsappSprite: any;
     private whatsappNextSprite: any;
+    private conversationStarted: boolean = false;
     private notified: boolean = false;
 
     private sextingBubble: any;
@@ -33,8 +34,11 @@ export class NightScene extends Phaser.Scene {
     preload() {
         //load in the map
         this.load.image('map-night', './assets/images/map-night.png');
+        this.load.image('flits-bubble', './assets/images/flits-bubble.png');
+        this.load.image('bully-bubble', './assets/images/bully-bubble.png');
         this.load.image('sexting-bubble', './assets/images/sexting-bubble.png');
         this.load.image('sexting-thanks', './assets/images/sexting-thanks.png');
+        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
         this.load.image('whatsapp', './assets/images/whatsapp.png');
         this.load.image('next-btn', './assets/images/volgende-button.png');
         this.load.image('msg-background', './assets/images/msg-background.jpg');
@@ -47,7 +51,7 @@ export class NightScene extends Phaser.Scene {
 
         // Load scene characters
         this.load.spritesheet('snapchatGirl', './assets/spritesheets/girl.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('oldBoyFriend', './assets/spritesheets/girl_3.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('oldBoyFriend', './assets/spritesheets/boy.png', { frameWidth: 64, frameHeight: 64 });
     }
 
     create() {
@@ -208,8 +212,6 @@ export class NightScene extends Phaser.Scene {
 
                             if (!self.answerCorrect) {
                                 if (element.text === "Melding maken bij de politie") {
-                                    self.answerCorrect = true;
-
                                     element.setColor("green");
 
                                     const background = self.add.sprite(self.char.x - 100, self.game.canvas.height * 0.5, 'msg-background', 0);
@@ -239,7 +241,9 @@ export class NightScene extends Phaser.Scene {
                                         answer4.destroy();
                                         messageText.destroy();
                                         self.phone.deleteAll();
-                                        self.char.body.moves = true;
+                                        self.answerCorrect = true;
+                                        self.sextingBubble.destroy();
+                                        self.thankPlayer();
                                     });
 
                                 } else {
@@ -276,11 +280,14 @@ export class NightScene extends Phaser.Scene {
         if (this.nametag)
             this.nametag.setX(this.char.x - 30);
 
-        if (this.char.body.x > 580)
-            this.notify();
+        if (this.char.body.x > 640 && this.conversationStarted == false)
+            this.showConversation();
 
-        if (this.notified)
+        if (this.notified && this.answerCorrect == false)
             this.walkingGirl();
+
+        // if (this.notified && this.answerCorrect && this.sextingBubble)
+        //     this.thankPlayer();
     }
 
     /**
@@ -293,14 +300,21 @@ export class NightScene extends Phaser.Scene {
         this.notified = true;
 
         // display message
-        this.sextingBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-bubble");
+        const textBubble = this.add.image(500, this.char.body.y - 50, "notification-textbubble");
+
+        setTimeout(() => {
+            textBubble.destroy();
+        }, 9000);
     }
 
     private loadSceneCharacters() {
         // Add Snapchat-girl to scene
         this.snapchatGirl = this.add.sprite(840, 485, 'snapchatGirl', 9);
-        // this.oldBoyFriend = this.add.sprite(1000, 485, 'oldBoyFriend', 9);
+        this.snapchatGirl.flipX = true;
+        this.oldBoyFriend = this.add.sprite(880, 485, 'oldBoyFriend', 9);
+
         this.physics.world.enableBody(this.snapchatGirl);
+        this.physics.world.enableBody(this.oldBoyFriend);
 
         this.anims.create({
             key: 'idleGirl',
@@ -316,6 +330,51 @@ export class NightScene extends Phaser.Scene {
             frameRate: 12,
             frames: this.anims.generateFrameNumbers('snapchatGirl', { start: 0, end: 8 })
         });
+
+        // Animates the walking state of the character
+        this.anims.create({
+            key: 'walkBoy',
+            repeat: -1,
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('oldBoyFriend', { start: 0, end: 8 })
+        });
+    }
+
+    private showConversation() {
+        this.conversationStarted = true;
+        this.char.body.moves = false;
+
+        // display flits
+        const flitsBubble = this.add.image(850, this.oldBoyFriend.body.y - 5, "flits-bubble");
+        const bullyMessage = this.add.image(860, this.oldBoyFriend.body.y - 45, "bully-bubble");
+
+        bullyMessage.visible = false;
+
+        setTimeout(() => {
+            bullyMessage.visible = true;
+        }, 1500);
+
+        setTimeout(() => {
+            flitsBubble.visible = false;
+        }, 2750);
+
+        setTimeout(() => {
+            bullyMessage.visible = false;
+
+            this.oldBoyFriend.flipX = true;
+            this.oldBoyFriend.body.setVelocityX(85);
+            this.oldBoyFriend.anims.play('walkBoy', true);
+        }, 4100);
+
+        setTimeout(() => {
+            this.oldBoyFriend.visible = false;
+
+            this.sextingBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-bubble");
+        }, 8000);
+
+        setTimeout(() => {
+            this.notify();
+        }, 9500);
     }
 
     private walkingGirl() {
@@ -332,6 +391,34 @@ export class NightScene extends Phaser.Scene {
             this.snapchatGirl.body.setVelocityX(-55);
             this.snapchatGirl.anims.play('walkGirl', true);
         }
+    }
+
+    private thankPlayer() {
+        const thanksBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-thanks");
+        thanksBubble.visible = false; 
+
+        this.snapchatGirl.anims.play('idleGirl', true);
+        this.snapchatGirl.body.setVelocityX(0);
+        this.snapchatGirl.flipX = false;
+
+        setTimeout(() => {
+            thanksBubble.visible = true;
+        }, 1500);
+
+        setTimeout(() => {
+            this.snapchatGirl.anims.play('walkGirl', true);
+            this.snapchatGirl.flipX = true;
+            this.snapchatGirl.body.setVelocityX(95);
+        }, 3500);
+
+        setTimeout(() => {
+            thanksBubble.destroy();
+            this.char.body.moves = true;
+        }, 4100);
+
+        setTimeout(() => {
+            this.snapchatGirl.visible = false;
+        }, 11000);
     }
 }
 
