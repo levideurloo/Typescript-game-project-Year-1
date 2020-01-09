@@ -31,7 +31,7 @@ export class EnterBuildingScene extends Phaser.Scene {
     private answerCorrect: boolean = false;
 
     private nametag: any;
-
+    private textbubble: any;
 
     constructor() {
         super({ key: 'enterbuildingscene' });
@@ -135,7 +135,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
 
@@ -213,10 +213,10 @@ export class EnterBuildingScene extends Phaser.Scene {
 
                     const messageText = self.add.text(x - 80, self.map.displayHeight / 2 - 40, "Wat is jouw actie op de situatie?", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
-                    const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 35, "Antwoord A", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 75, "Antwoord B", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 115, "Antwoord C", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 155, "Antwoord D", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 35, "Stuur de foto door", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 75, "Doe niks", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 115, "Zeg dat dit NIET oké is", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 155, "Download de foto", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
                     messageText.setDepth(101);
 
@@ -229,7 +229,7 @@ export class EnterBuildingScene extends Phaser.Scene {
                         element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
                             if (!self.answerCorrect) {
-                                if (element.text === "Antwoord A") {
+                                if (element.text === "Zeg dat dit NIET oké is") {
                                     self.answerCorrect = true;
 
                                     element.setColor("green");
@@ -241,7 +241,7 @@ export class EnterBuildingScene extends Phaser.Scene {
                                     const headerText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
                                     headerText.setDepth(16);
 
-                                    const textMsg = "Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken.";
+                                    const textMsg = "De consequenties van naaktfoto's doorsturen of opslaan is een illegaal feit, omdat het super veel schade oplevert aan het slachtoffer. Het beste is om aan te geven dat dit NIET oke is & hulp aanbieden waar nodig.";
 
                                     const infoText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
                                     infoText.setDepth(16);
@@ -319,7 +319,14 @@ export class EnterBuildingScene extends Phaser.Scene {
 
             setTimeout(function () {
                 self.notify();
-            }, 1500);
+
+                self.textbubble = self.add.image(self.char.body.x + 100, self.char.body.y - 50, "notification-textbubble");
+
+            }, 2000);
+        }
+
+        if (this.answerCorrect) {
+            this.textbubble.destroy();
         }
 
         // Function that allow players to enter a building
@@ -328,10 +335,10 @@ export class EnterBuildingScene extends Phaser.Scene {
         // Function that shows player the controls to aenter a building
         this.showEntryControls();
 
-        
+
 
         if (this.nametag) {
-            this.nametag.setX(this.char.x -18);
+            this.nametag.setX(this.char.x - 18);
         }
     }
 
@@ -365,7 +372,7 @@ export class EnterBuildingScene extends Phaser.Scene {
     }
 
     private enterBuilding() {
-        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.receivedWhatsappNotification) {
+        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect) {
             this.scene.start('bonboncafescene')
         }
     }
