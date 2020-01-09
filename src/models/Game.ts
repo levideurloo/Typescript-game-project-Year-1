@@ -8,4 +8,10 @@ export class Game extends Phaser.Game {
     characterInfo: ICharacterInfo | undefined;
 
     chosenName: string | undefined;
+
+    lives: number = 3;
+
+
+
+
 }

@@ -177,10 +177,8 @@ export class GameScene extends Phaser.Scene {
         if (this.question)
             this.question.setX(this.char.body.x + 307);
 
-
-        if (this.nametag) {
+        if (this.nametag)
             this.nametag.setX(this.char.x - 18);
-        }
 
         this.boundPhone();
     }
@@ -269,12 +267,9 @@ export class GameScene extends Phaser.Scene {
                         } else
                             text.setColor("red");
                     }
-
                 });
             }
-
         }
-
     }
 
     /**
