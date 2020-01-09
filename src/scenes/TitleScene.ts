@@ -30,8 +30,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     public preload() {
-        // this.loadMusic();
-
+        this.loadMusic();
     }
 
     public create() {
