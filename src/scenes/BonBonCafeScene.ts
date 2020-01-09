@@ -147,7 +147,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 100, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 100, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
 
@@ -269,7 +269,7 @@ export class BonBonCafeScene extends Phaser.Scene {
 
                                         if (!self.hasAnwsered == true) {
                                             //Add arrow above Bon Bon Cafe
-                                            self.arrow = self.add.sprite(-575, 300, 'arrow', 0);
+                                            self.arrow = self.add.sprite(-575, 200, 'arrow', 0);
                                             self.arrow.setScale(4);
 
                                             //Animate Floating Arrow
