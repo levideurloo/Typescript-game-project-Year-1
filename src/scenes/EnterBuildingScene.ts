@@ -264,16 +264,13 @@ export class EnterBuildingScene extends Phaser.Scene {
                                         self.char.body.moves = true;
                                     });
 
-                                } else {
+                                } else
                                     element.setColor("red");
-                                }
                             }
                         });
                     }, self);
 
                 });
-
-
             }, 10);
 
             this.whatsappSprite.displayHeight = 350;
@@ -306,11 +303,10 @@ export class EnterBuildingScene extends Phaser.Scene {
         this.arrow.angle = 90;
 
         // Checks if player is in front of building
-        if (this.char.body.x > 400) {
+        if ((this.char.body.x > 400) && (this.char.body.x < 420))
             this.canEnter = true;
-        } else {
+        else
             this.canEnter = false;
-        }
 
         const self = this;
 
@@ -325,9 +321,8 @@ export class EnterBuildingScene extends Phaser.Scene {
             }, 2000);
         }
 
-        if (this.answerCorrect) {
+        if (this.answerCorrect) 
             this.textbubble.destroy();
-        }
 
         // Function that allow players to enter a building
         this.enterBuilding();
@@ -335,18 +330,14 @@ export class EnterBuildingScene extends Phaser.Scene {
         // Function that shows player the controls to aenter a building
         this.showEntryControls();
 
-
-
-        if (this.nametag) {
+        if (this.nametag) 
             this.nametag.setX(this.char.x - 18);
-        }
     }
 
     /**
      * Function which displays a notification by playing a sound and showing a message.
      */
     private notify() {
-
         // play sound
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
@@ -372,11 +363,8 @@ export class EnterBuildingScene extends Phaser.Scene {
     }
 
     private enterBuilding() {
-        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect) {
-            this.scene.start('bonboncafescene')
-        }
+        if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect)
+            this.scene.start('bonboncafescene');
     }
-
-
 }
 
