@@ -46,7 +46,9 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.load.audio('music', './assets/audio/NGGUU.mp3');
 
         // Load in the phone chat and button parts
-        this.load.image('whatsapp', './assets/images/classchat.png');
+        this.load.image('classchat', './assets/images/classchat.png');
+        this.load.image('next-btn', './assets/images/volgende-button.png');
+        this.load.image('msg-background', './assets/images/msg-background.jpg');
 
         // Add anwsers to the phone
         this.phone.addAnswer('Sla de pestkop in elkaar');
@@ -170,7 +172,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         // Using the JustDown function to prevent infinity repeat
         if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.isInRange == true && !this.phone.isToggled) {
             this.phone.togglePhone(this.map.displayHeight);
-            this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'whatsapp', 0).setDepth(7).setScale(0.5);
+            this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'classchat', 0).setDepth(7).setScale(0.5);
 
             const self = this;
 
