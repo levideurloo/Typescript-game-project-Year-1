@@ -61,3 +61,6 @@ typings/
 .next
 
 index.html
+assets/images/.DS_Store
+
+assets/.DS_Store

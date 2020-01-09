@@ -6,14 +6,12 @@ export class Phone {
 	private answer2: Phaser.GameObjects.Sprite | undefined;
 	private answer3: Phaser.GameObjects.Sprite | undefined;
 	private answer4: Phaser.GameObjects.Sprite | undefined;
-	// private questionText: Phaser.GameObjects.Text | undefined;
 
 	constructor(
 		private answers: string[] = [],
 		private question: string = ''
 	) {
 	}
-
 
 	/**
      *  Show/Hide the in-game phone
@@ -54,7 +52,6 @@ export class Phone {
 				this.isToggled = true;
 			}
 		}
-
 
 		return height;
 	}
@@ -119,15 +116,6 @@ export class Phone {
 
 	public setQuestion(question: string) {
 		this.question = question;
-
-		// if (this.questionText) {
-		// 	this.questionText.text = question;
-		// 	this.questionText.style.fontFamily = 'Verdana, "Times New Roman", Tahoma, serif';
-		// 	this.questionText.style.fontSize = '12px';
-		// 	this.questionText.style.color = 'black';
-		// 	this.questionText.style.setWordWrapWidth(170);
-		// 	this.questionText.setDepth(3);
-		// }
 	}
 
 	public getQuestion(): string {
@@ -147,7 +135,4 @@ export class Phone {
 			if (element) element.destroy();
 		});
 	}
-
-
-
 }
