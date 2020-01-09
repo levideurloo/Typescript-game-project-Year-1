@@ -18,6 +18,7 @@ export class GameScene extends Phaser.Scene {
     private nametag: any;
 
     private answerCorrect: boolean = false;
+    private conversationStarted: boolean = false;
 
     /**
      * Boolean to check MOTHER
@@ -34,9 +35,8 @@ export class GameScene extends Phaser.Scene {
         const info = (this.game as Game).characterInfo;
 
         //load character 
-        if (info) {
+        if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        }
 
         this.phone.addAnswer('Sla de pestkop in elkaar');
         this.phone.addAnswer('Zoek hulp bij een leraar');
@@ -147,7 +147,6 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.char);
 
         this.onCollideBullies();
-        // this.receiveNotificationMother();
 
         const phoneSprite = this.phone.getSprite();
         const messageSprite = this.phone.getQuestionSprite();
@@ -160,7 +159,6 @@ export class GameScene extends Phaser.Scene {
             phoneSprite.setX(this.char.body.x + 385);
             phoneSprite.setDepth(6);
         }
-
         if (messageSprite)
             messageSprite.setX(this.char.body.x + 385);
 
@@ -179,10 +177,8 @@ export class GameScene extends Phaser.Scene {
         if (this.question)
             this.question.setX(this.char.body.x + 307);
 
-
-        if (this.nametag) {
+        if (this.nametag)
             this.nametag.setX(this.char.x - 18);
-        }
 
         this.boundPhone();
     }
@@ -218,9 +214,7 @@ export class GameScene extends Phaser.Scene {
      * Toggle the question & answers
      */
     private toggleQuestion(displayHeight: number | undefined) {
-
-        //Stop player from moving
-        // this.char.setVelocityX(0);
+        // Stop player from moving
         this.char.body.moves = false
 
         // Toggle the question
@@ -258,7 +252,7 @@ export class GameScene extends Phaser.Scene {
                             const headerText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
                             headerText.setDepth(16);
 
-                            const textMsg = "Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken.";
+                            const textMsg = "In deze situatie is het inderdaad het meest verstandig om een leraar te roepen. Zo weet je zeker dat de situatie niet uit loopt op ruzie.";
 
                             const infoText = this.add.text(this.char.body.x - 250, this.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
                             infoText.setDepth(16);
@@ -270,27 +264,22 @@ export class GameScene extends Phaser.Scene {
                             nextButton.setInteractive().on('pointerdown', () => {
                                 this.scene.start('enterbuildingscene', { charX: this.char.x });
                             });
-                        } else {
+                        } else
                             text.setColor("red");
-                        }
                     }
-
                 });
             }
-
         }
-
     }
 
     /**
      * Loads the Bullies 
      */
     private loadBullies() {
-
         // Add bullied character to the scene
         this.bulliedChar = this.add.sprite(130, 485, 'bulliedBoy', 9); // -500 X-position  485 Y-postion
 
-        this.bullyOne = this.add.sprite(90, 485, 'bully', 9); // -500 X-position  485 Y-postion
+        this.bullyOne = this.add.sprite(90, 485, 'bullyGirl', 9); // -500 X-position  485 Y-postion
         this.bullyTwo = this.add.sprite(150, 485, 'bully', 9); // -500 X-position  485 Y-postion
         this.bullyThree = this.add.sprite(170, 485, 'bully', 9); // -500 X-position  485 Y-postion
 
@@ -306,12 +295,23 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.existing(this.bullyTwo);
         this.physics.add.existing(this.bullyThree);
 
-        const bullyTextBubble = this.add.image(this.bullyOne.body.x + 100, this.bullyOne.body.y - 50, "bully-text")
+        this.anims.create({
+            key: 'walkBullyGirl',
+            repeat: -1,
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('bullyGirl', { start: 0, end: 8 })
+        });
+
+        this.anims.create({
+            key: 'walkBully',
+            repeat: -1,
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('bully', { start: 0, end: 8 })
+        });
     }
 
 
     private onCollideBullies() {
-
         //get x from characters
         const playerX = this.char.body.x;
 
@@ -326,6 +326,72 @@ export class GameScene extends Phaser.Scene {
             }, 10000);
 
             this.notify();
+            this.showConversation();
         }
+
+        if (!this.conversationStarted && playerX + 150 > this.bullyOne.body.x)
+            this.showConversation();
+    }
+
+    private showConversation() {
+        this.conversationStarted = true;
+
+        const bullyTextBubble = this.add.image(this.bullyOne.body.x + 120, this.bullyOne.body.y - 17, "bully-text");
+        bullyTextBubble.visible = false;
+
+        this.jumpBully();
+        
+        this.bullyOne.anims.play('walkBullyGirl', true);
+
+        this.bullyThree.anims.play('walkBully', true);
+
+        setInterval(() => {
+            if (this.bullyOne.body.flipX === true)
+                this.bullyOne.body.flipX = false;
+            else
+                this.bullyOne.body.flipX = true;
+
+            this.jumpBully();
+        }, 4000);
+
+
+        setTimeout(() => {
+            bullyTextBubble.visible = true;
+        }, 3000);
+
+        setTimeout(() => {
+            bullyTextBubble.visible = false;
+        }, 6500);
+
+        setInterval(() => {
+            bullyTextBubble.visible = true;
+
+            setTimeout(() => {
+                bullyTextBubble.visible = false;
+            }, 4000);
+        }, 12000);
+
+    }
+
+    private jumpBully() {
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(-50);
+        }, 200);
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(50);
+        }, 300);
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(0);
+        }, 400);
+
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(-50);
+        }, 700);
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(50);
+        }, 800);
+        setTimeout(() => {
+            this.bullyTwo.body.setVelocityY(0);
+        }, 900);
     }
 }

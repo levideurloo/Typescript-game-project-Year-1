@@ -61,7 +61,7 @@ export class Preloader extends Phaser.Scene {
 
     private loadSpeechBubbles() {
         // // Global
-        this.load.image('notification-textbubble', './assets/images/notification-textbubble.gif');
+        this.load.image('notification-textbubble', './assets/images/notification-textbubble.png');
 
         // Game Scene
         this.load.image('bully-text', './assets/images/bully-text.gif');
@@ -81,10 +81,13 @@ export class Preloader extends Phaser.Scene {
 
     private loadSprites() {
         // Bullied boy
-        this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy_2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('bulliedBoy', './assets/spritesheets/boy.png', { frameWidth: 64, frameHeight: 64 });
 
         // Bully
         this.load.spritesheet('bully', './assets/spritesheets/boy_3.png', { frameWidth: 64, frameHeight: 64 });
+
+        // Bully Girl
+        this.load.spritesheet('bullyGirl', './assets/spritesheets/girl_3.png', { frameWidth: 64, frameHeight: 64 });
 
         // Snapchat Girl
         this.load.spritesheet('snapchatGirl', './assets/spritesheets/girl.png', { frameWidth: 64, frameHeight: 64 });
@@ -97,6 +100,7 @@ export class Preloader extends Phaser.Scene {
     }
 
     private loadImages() {
+        this.load.image('classchat', './assets/images/classchat.png');
         this.load.image('whatsapp', './assets/images/whatsapp.png');
         this.load.image('next-btn', './assets/images/volgende-button.png');
         this.load.image('msg-background', './assets/images/msg-background.jpg');

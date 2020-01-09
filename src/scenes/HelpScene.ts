@@ -33,7 +33,7 @@ export class HelpScene extends Phaser.Scene {
     //Add pointer down listener
     exitButton.setInteractive().on('pointerdown', () => {
       this.scene.start('main');
-    })
+    });
   }
 
   private loadText() {
