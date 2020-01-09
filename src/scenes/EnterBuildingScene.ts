@@ -348,7 +348,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         // Get X coordinate from character
         const playerX = this.char.body.x;
 
-        if (!this.hasReceivedEntryControls && playerX > 350) {
+        if (!this.hasReceivedEntryControls && this.answerCorrect && playerX > 350) {
             // Is player in reach && has message not been displayed yet
 
             this.hasReceivedEntryControls = true;
