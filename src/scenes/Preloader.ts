@@ -7,9 +7,7 @@ export class Preloader extends Phaser.Scene {
             pack: {
                 files: [
                     { type: 'image', key: 'bar', url: './assets/images/loadBar.png' },
-                    { type: 'image', key: 'barBg', url: './assets/images/barBg.png' },
-                    { type: 'image', key: 'phone', url: './assets/images/phone.png' },
-                    { type: 'image', key: 'phone_message', url: './assets/images/phone_message.png' }
+                    { type: 'image', key: 'barBg', url: './assets/images/barBg.png' }
                 ]
             }
         });
@@ -96,10 +94,14 @@ export class Preloader extends Phaser.Scene {
         this.load.spritesheet('oldBoyFriend', './assets/spritesheets/boy.png', { frameWidth: 64, frameHeight: 64 });
 
         // Pointing arrow
-        this.load.spritesheet('arrow', './assets/spritesheets/arrow.png', { frameWidth: 28, frameHeight: 21 })
+        this.load.spritesheet('arrow', './assets/spritesheets/arrow.png', { frameWidth: 28, frameHeight: 21 });
     }
 
     private loadImages() {
+        this.load.image('lifes-all', './assets/images/lifes-all.png');
+        this.load.image('lifes-1', './assets/images/life-1.png');
+        this.load.image('phone', './assets/images/phone.png');
+        this.load.image('phone_message', './assets/images/phone_message.png');
         this.load.image('classchat', './assets/images/classchat.png');
         this.load.image('whatsapp', './assets/images/whatsapp.png');
         this.load.image('next-btn', './assets/images/volgende-button.png');
