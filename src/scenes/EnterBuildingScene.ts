@@ -264,16 +264,13 @@ export class EnterBuildingScene extends Phaser.Scene {
                                         self.char.body.moves = true;
                                     });
 
-                                } else {
+                                } else
                                     element.setColor("red");
-                                }
                             }
                         });
                     }, self);
 
                 });
-
-
             }, 10);
 
             this.whatsappSprite.displayHeight = 350;
@@ -306,11 +303,10 @@ export class EnterBuildingScene extends Phaser.Scene {
         this.arrow.angle = 90;
 
         // Checks if player is in front of building
-        if (this.char.body.x > 400) {
+        if ((this.char.body.x > 400) && (this.char.body.x < 420))
             this.canEnter = true;
-        } else {
+        else
             this.canEnter = false;
-        }
 
         const self = this;
 
