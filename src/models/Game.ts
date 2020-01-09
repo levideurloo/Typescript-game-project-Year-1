@@ -9,9 +9,5 @@ export class Game extends Phaser.Game {
 
     chosenName: string | undefined;
 
-    lives: number = 3;
-
-
-
-
+    lives: number = 2;
 }

@@ -2,7 +2,6 @@ import { Phone } from './../models/Phone';
 import { Game } from "../models/Game";
 
 export class GameScene extends Phaser.Scene {
-
     private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
     private question: Phaser.GameObjects.Text | any;
@@ -16,6 +15,7 @@ export class GameScene extends Phaser.Scene {
     private bullyThree: any;
 
     private nametag: any;
+    private lifesText: any;
 
     private answerCorrect: boolean = false;
     private conversationStarted: boolean = false;
@@ -51,6 +51,12 @@ export class GameScene extends Phaser.Scene {
         //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
 
+        // Get Lifes
+        // const lifes = info ? info.lifes : '2';
+
+        this.lifesText = this.add.text(-770, 20, "Levens: ", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
+        this.lifesText.setDepth(5);
+
         // Add map to the scene
         this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map");
         this.map.displayWidth = 2500;
@@ -74,7 +80,7 @@ export class GameScene extends Phaser.Scene {
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x -18, this.char.body.y - 40, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 18, this.char.body.y - 40, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
 
@@ -122,6 +128,8 @@ export class GameScene extends Phaser.Scene {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    
+
         if (this.cursorKeys.right.isDown) {
             this.char.body.setVelocityX(75); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
@@ -145,6 +153,10 @@ export class GameScene extends Phaser.Scene {
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
+
+        this.lifesText.setX(this.char.body.x);
+        console.log(this.cameras.main.x);
+        
 
         this.onCollideBullies();
 
@@ -340,7 +352,7 @@ export class GameScene extends Phaser.Scene {
         bullyTextBubble.visible = false;
 
         this.jumpBully();
-        
+
         this.bullyOne.anims.play('walkBullyGirl', true);
 
         this.bullyThree.anims.play('walkBully', true);
