@@ -1,79 +1,62 @@
-import { Game } from "./../models/Game";
 import { Phone } from './../models/Phone';
+import { Game } from "../models/Game";
 
-export class BonBonCafeScene extends Phaser.Scene {
-
-    private char: any;
+export class NightScene extends Phaser.Scene {
+    private char: any; // & { body: Phaser.Physics.Arcade.Body }
     private phone: Phone;
     private cursorKeys: any;
     private spaceBar: any;
-    private enterKey: any;
     private map: any;
-    private arrow: any;
-    private bulliedChar: any;
-    private isInRange: boolean = false;
-    private bullyTextBubble: any;
-
-    private charX: number = 0;
 
     private whatsappSprite: any;
     private whatsappNextSprite: any;
-    private receivedWhatsappNotification: boolean = false;
+    private conversationStarted: boolean = false;
+    private notified: boolean = false;
+
+    private sextingBubble: any;
+
+    private snapchatGirl: any;
+    private oldBoyFriend: any;
 
     private answerSprite1: any;
     private answerSprite2: any;
     private answerSprite3: any;
     private answerSprite4: any;
+
+    private answerCorrect: boolean = false;
     private nametag: any;
 
-    private backgroundMusic: any;
-    private answerCorrect: boolean = false;
-
     constructor() {
-        super({ key: 'bonboncafescene' });
+        super({ key: 'nightscene' });
         this.phone = new Phone();
     }
 
     preload() {
-        // Recieves character info from selection screen
         const info = (this.game as Game).characterInfo;
 
-        // Load character 
-        if (info) {
+        //load character 
+        if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        }
-        // Load in the background music
-        this.load.audio('music', './assets/audio/NGGUU.mp3');
-
-        // Load in the phone chat and button parts
-        this.load.image('whatsapp', './assets/images/classchat.png');
-
-        // Add anwsers to the phone
-        this.phone.addAnswer('Sla de pestkop in elkaar');
-        this.phone.addAnswer('Zoek hulp bij een leraar');
-        this.phone.addAnswer('Help de pesters');
-        this.phone.addAnswer('Doe niks');
     }
 
     create() {
-        // Get game information
+        //get game info
         const info = (this.game as Game).characterInfo;
 
-        // Get character name, by default 'boy' if none is selected
+        //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
 
         // Add map to the scene
-        this.map = this.add.image(100, this.game.canvas.height / 2, "cafe")
-        this.map.displayWidth = 1500;
+        this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map-night")
+        this.map.displayWidth = 2500;
         this.map.displayHeight = this.game.canvas.height;
 
         // Set world bounds
         this.physics.world.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight, true, true, true, true);
 
         // Add character to the scene
-        this.char = this.add.sprite(-575, 400, characterName, 0);
+        this.char = this.add.sprite(443, 485, characterName, 0);
         this.char.flipX = true;
-        this.char.setScale(4);
         this.physics.world.enableBody(this.char);
 
         // Makes the character collide with world bounds
@@ -94,23 +77,18 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.anims.create({
             key: 'walk',
             repeat: -1,
-            frameRate: 8,
+            frameRate: 12,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
         });
 
-        // Plays Never Gonna Give You Up 8Bit on entry
-        this.backgroundMusic = this.sound.add('music');
-        this.backgroundMusic.play();
-
-
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
-
         phoneSprite.setDepth(6);
 
         this.phone.setSprite(phoneSprite, .38, .38);
 
         const messageSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
+
         messageSprite.setDepth(7);
 
         const answerSprite1 = this.add.sprite(0, this.map.displayHeight + 250, 'phone_message', 0);
@@ -133,16 +111,12 @@ export class BonBonCafeScene extends Phaser.Scene {
         answerSprite3.destroy();
         answerSprite4.destroy();
 
-        // Create the bullied character
-        this.bulliedChar = this.add.sprite(300, 400, 'bulliedBoy', 9);
-        this.bulliedChar.setScale(4);
-        this.physics.world.enableBody(this.bulliedChar);
+        this.loadSceneCharacters();
 
-        // Shows the bullied characters message when in range
         const chosenName = (this.game as Game).chosenName;
 
         if (chosenName) {
-            this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
+            this.nametag = this.add.text(this.char.x - 18, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
     }
@@ -150,25 +124,22 @@ export class BonBonCafeScene extends Phaser.Scene {
     update() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
         if (this.cursorKeys.right.isDown) {
-            this.char.body.setVelocityX(190); // move right with 75 speed
+            this.char.body.setVelocityX(75); // move right with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = true; // flip the sprite to the left
-
         } else if (this.cursorKeys.left.isDown) {
-            this.char.body.setVelocityX(-190) // move left with 75 speed
+            this.char.body.setVelocityX(-75) // move left with 75 speed
             this.char.anims.play('walk', true); // plays walking animation
             this.char.flipX = false; // use the original sprite looking to the right
-
         } else {
             this.char.body.setVelocityX(0);
             this.char.anims.play('idle', true); // plays the idle animtaion when no keys are pressed
         }
 
         // Using the JustDown function to prevent infinity repeat
-        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.isInRange == true && !this.phone.isToggled) {
+        if (Phaser.Input.Keyboard.JustDown(this.spaceBar) && this.notified && !this.phone.isToggled) {
             this.phone.togglePhone(this.map.displayHeight);
             this.whatsappSprite = this.add.sprite(0, this.map.displayHeight - 190, 'whatsapp', 0).setDepth(7).setScale(0.5);
 
@@ -201,18 +172,18 @@ export class BonBonCafeScene extends Phaser.Scene {
 
                     self.phone.setQuestionSprite(messageSprite, .47, .30);
 
-                    const answerHeight = .22;
-                    self.phone.setAnswerSprite(1, self.answerSprite1, .47, answerHeight);
+                    const answerHeight = .15;
+                    self.phone.setAnswerSprite(1, self.answerSprite1, .47, (answerHeight * 1.5));
                     self.phone.setAnswerSprite(2, self.answerSprite2, .47, answerHeight);
                     self.phone.setAnswerSprite(3, self.answerSprite3, .47, answerHeight);
                     self.phone.setAnswerSprite(4, self.answerSprite4, .47, answerHeight);
 
-                    const messageText = self.add.text(x - 80, self.map.displayHeight / 2 - 44, "De jongen wordt nog steeds gepest wat ga je hier aandoen?", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const messageText = self.add.text(x - 80, self.map.displayHeight / 2 - 40, "Wat raadt je het meisje aan om te doen?", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
-                    const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 27, "Ik app naar de pesters om ze te laten stoppen", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 67, "Ik screenshot de chat en stuur die naar de leraar", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 107, "Ik vertel de jongen dat hij er niet zo mee moet zitten", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
-                    const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 150, "Ik doe niks", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer1 = self.add.text(x - 80, self.map.displayHeight / 2 + 25, "Melding maken bij de politie", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer2 = self.add.text(x - 80, self.map.displayHeight / 2 + 75, "Ex-vriendje bedreigen", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer3 = self.add.text(x - 80, self.map.displayHeight / 2 + 115, "Ex-vriendje uitschelden", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
+                    const answer4 = self.add.text(x - 80, self.map.displayHeight / 2 + 155, "Vriendinnen inlichten", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 170 } });
 
                     messageText.setDepth(101);
 
@@ -225,9 +196,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                         element.setInteractive().on('pointerdown', function (this: Phaser.GameObjects.Image) {
 
                             if (!self.answerCorrect) {
-                                if (element.text === "Ik screenshot de chat en stuur die naar de leraar") {
-                                    self.answerCorrect = true;
-
+                                if (element.text === "Melding maken bij de politie") {
                                     element.setColor("green");
 
                                     const background = self.add.sprite(self.char.x - 100, self.game.canvas.height * 0.5, 'msg-background', 0);
@@ -237,7 +206,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                                     const headerText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
                                     headerText.setDepth(16);
 
-                                    const textMsg = "Wanneer je ziet dat iemand online gepest wordt is het verstandig om dit aan een volwassen te melden. LET OP!: Zorg dat je de chat screenshot zo is er bewijs van de daad.";
+                                    const textMsg = "Om fotos van internet te verwijderen die daar onbedoeld zijn gekomen heb je de politie nodig.";
 
                                     const infoText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
                                     infoText.setDepth(16);
@@ -257,23 +226,21 @@ export class BonBonCafeScene extends Phaser.Scene {
                                         answer4.destroy();
                                         messageText.destroy();
                                         self.phone.deleteAll();
-                                        self.char.body.moves = true;
+                                        self.answerCorrect = true;
+                                        self.sextingBubble.destroy();
+                                        self.thankPlayer();
                                     });
-
-                                } else {
+                                } else
                                     element.setColor("red");
-                                }
                             }
                         });
                     }, self);
-
                 });
-
-
             }, 10);
 
             this.whatsappSprite.displayHeight = 350;
             this.whatsappSprite.displayWidth = 190;
+            this.char.body.moves = false
         }
 
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
@@ -281,79 +248,154 @@ export class BonBonCafeScene extends Phaser.Scene {
 
         const phoneSprite = this.phone.getSprite();
 
-        if (phoneSprite) {
+        if (phoneSprite)
             phoneSprite.setX(this.char.body.x + 385);
-        }
 
-        if (this.whatsappSprite) {
+        if (this.whatsappSprite)
             this.whatsappSprite.setX(this.char.body.x + 385);
-        }
 
-        if (this.whatsappNextSprite) {
+        if (this.whatsappNextSprite)
             this.whatsappNextSprite.setX(this.char.body.x + 385);
-        }
 
-        // Check if player is in range of bullied charater. Then shows text bubble
-        if (this.char.body.x > this.bulliedChar.body.x - 200) {
-            this.showBulliedMessage();
+        if (this.nametag)
+            this.nametag.setX(this.char.x - 18);
 
-        }
+        if (this.char.body.x > 640 && this.conversationStarted == false)
+            this.showConversation();
 
-        // Leave the building
-        this.leaveBuilding();
-
-        if (this.nametag) {
-            this.nametag.setX(this.char.x - 30);
-        }
+        if (this.notified && this.answerCorrect == false)
+            this.walkingGirl();
     }
 
     /**
- * Function which displays a notification by playing a sound and showing a message.
- */
+     * Function which displays a notification by playing a sound and showing a message.
+     */
     private notify() {
-
         // play sound
         const notificationSound = this.sound.add('NOTIFICATION');
         notificationSound.play();
+        this.notified = true;
 
         // display message
-        const textBubble = this.add.image(this.char.body.x + 100, this.char.body.y - 50, "notification-textbubble")
+        const textBubble = this.add.image(500, this.char.body.y - 50, "notification-textbubble");
 
-        setTimeout(function () {
+        setTimeout(() => {
             textBubble.destroy();
-        }, 10000);
-
+        }, 9000);
     }
 
-    /**
-     * Let the phone appear on the screen
-     */
-    private togglePhone() {
-        if (this.phone)
-            this.phone.togglePhone(this.map.displayHeight);
+    private loadSceneCharacters() {
+        // Add Snapchat-girl to scene
+        this.snapchatGirl = this.add.sprite(840, 485, 'snapchatGirl', 9);
+        this.snapchatGirl.flipX = true;
+        this.oldBoyFriend = this.add.sprite(880, 485, 'oldBoyFriend', 9);
+
+        this.physics.world.enableBody(this.snapchatGirl);
+        this.physics.world.enableBody(this.oldBoyFriend);
+
+        this.anims.create({
+            key: 'idleGirl',
+            repeat: -1,
+            frameRate: 1,
+            frames: this.anims.generateFrameNumbers('snapchatGirl', { start: 0, end: 0 })
+        });
+
+        // Animates the walking state of the character
+        this.anims.create({
+            key: 'walkGirl',
+            repeat: -1,
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('snapchatGirl', { start: 0, end: 8 })
+        });
+
+        // Animates the walking state of the character
+        this.anims.create({
+            key: 'walkBoy',
+            repeat: -1,
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('oldBoyFriend', { start: 0, end: 8 })
+        });
     }
 
-    /**
-     * Let the phone appear on the screen
-     */
-    private boundPhone() {
-        if (this.char.body.x > (this.game.canvas.width + 100) && this.phone.getToggledState())
-            this.phone.togglePhone(this.map.displayHeight);
-    }
-
-    private showBulliedMessage() {
-        // Adds the text bubble
-        const bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
-
-        this.isInRange = true;
-        // Stop player from moving
+    private showConversation() {
+        this.conversationStarted = true;
         this.char.body.moves = false;
+
+        // display flits
+        const flitsBubble = this.add.image(850, this.oldBoyFriend.body.y - 5, "flits-bubble");
+        const bullyMessage = this.add.image(860, this.oldBoyFriend.body.y - 45, "bully-bubble");
+
+        bullyMessage.visible = false;
+
+        setTimeout(() => {
+            bullyMessage.visible = true;
+        }, 1500);
+
+        setTimeout(() => {
+            flitsBubble.visible = false;
+        }, 2750);
+
+        setTimeout(() => {
+            bullyMessage.visible = false;
+
+            this.oldBoyFriend.flipX = true;
+            this.oldBoyFriend.body.setVelocityX(85);
+            this.oldBoyFriend.anims.play('walkBoy', true);
+        }, 4100);
+
+        setTimeout(() => {
+            this.oldBoyFriend.visible = false;
+
+            this.sextingBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-bubble");
+        }, 8000);
+
+        setTimeout(() => {
+            this.notify();
+        }, 9500);
     }
 
-    private leaveBuilding() {
-        if (this.answerCorrect && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
-            this.backgroundMusic.stop();
-            this.scene.start('nightscene');
+    private walkingGirl() {
+        if (this.snapchatGirl.body.x < 830) {
+            this.snapchatGirl.body.setVelocityX(55);
+            this.snapchatGirl.anims.play('walkGirl', true);
+            this.snapchatGirl.flipX = true;
+        }
+        if (this.snapchatGirl.body.x > 895) {
+            this.snapchatGirl.body.setVelocityX(0);
+            this.snapchatGirl.anims.play('walkGirl', false);
+            this.snapchatGirl.flipX = false;
+
+            this.snapchatGirl.body.setVelocityX(-55);
+            this.snapchatGirl.anims.play('walkGirl', true);
         }
     }
+
+    private thankPlayer() {
+        const thanksBubble = this.add.image(840, this.snapchatGirl.body.y - 35, "sexting-thanks");
+        thanksBubble.visible = false; 
+
+        this.snapchatGirl.anims.play('idleGirl', true);
+        this.snapchatGirl.body.setVelocityX(0);
+        this.snapchatGirl.flipX = false;
+
+        setTimeout(() => {
+            thanksBubble.visible = true;
+        }, 1500);
+
+        setTimeout(() => {
+            this.snapchatGirl.anims.play('walkGirl', true);
+            this.snapchatGirl.flipX = true;
+            this.snapchatGirl.body.setVelocityX(95);
+        }, 3500);
+
+        setTimeout(() => {
+            thanksBubble.destroy();
+            this.char.body.moves = true;
+        }, 4100);
+
+        setTimeout(() => {
+            this.snapchatGirl.visible = false;
+        }, 11000);
+    }
 }
+
