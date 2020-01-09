@@ -240,19 +240,19 @@ export class BonBonCafeScene extends Phaser.Scene {
 
                                     const background = self.add.sprite(self.char.x - 100, self.game.canvas.height * 0.5, 'msg-background', 0);
                                     background.setScale(0.6);
-                                    background.setDepth(15);
+                                    background.setDepth(103);
 
                                     const headerText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.25, "Helemaal goed!", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '18px', color: 'green', wordWrap: { width: 170 } });
-                                    headerText.setDepth(16);
+                                    headerText.setDepth(104);
 
                                     const textMsg = "Wanneer je ziet dat iemand online gepest wordt is het verstandig om dit aan een volwassen te melden. LET OP!: Zorg dat je de chat screenshot zo is er bewijs van de daad.";
 
                                     const infoText = self.add.text(self.char.body.x - 250, self.game.canvas.height * 0.35, textMsg, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '12px', color: 'black', wordWrap: { width: 400 } });
-                                    infoText.setDepth(16);
+                                    infoText.setDepth(104);
 
                                     const nextButton = self.add.sprite(self.char.x - 230, self.game.canvas.height * 0.6, 'next-btn', 0);
                                     nextButton.setScale(0.65);
-                                    nextButton.setDepth(16);
+                                    nextButton.setDepth(104);
 
                                     nextButton.setInteractive().on('pointerdown', () => {
                                         background.destroy();
@@ -265,7 +265,6 @@ export class BonBonCafeScene extends Phaser.Scene {
                                         answer4.destroy();
                                         messageText.destroy();
                                         self.phone.deleteAll();
-                                        self.char.body.moves = true;
 
                                         if (!self.hasAnwsered == true) {
                                             //Add arrow above Bon Bon Cafe
@@ -302,7 +301,7 @@ export class BonBonCafeScene extends Phaser.Scene {
             this.whatsappSprite.displayWidth = 190;
         }
 
-        this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
+        this.cameras.main.setBounds(-770, 0, this.map.displayWidth + 100, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
         const phoneSprite = this.phone.getSprite();
@@ -319,23 +318,40 @@ export class BonBonCafeScene extends Phaser.Scene {
             this.whatsappNextSprite.setX(this.char.body.x + 385);
         }
 
+
         // Check if player is in range of bullied charater. Then shows text bubble
         if (this.char.body.x > this.bulliedChar.body.x - 200) {
-            this.showBulliedMessage();
+
+            // Adds the text bubble
+            if (!this.bullyTextBubble) {
+                this.bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
+            }
+            this.isInRange = true;
 
             //can play leave animation?
-            if (this.hasAnwsered && !this.hasPlayedBulliedBoyLeaveAnimation && this.bullyTextBubble) {
-
+            if (this.answerCorrect && !this.hasPlayedBulliedBoyLeaveAnimation) {
                 this.hasPlayedBulliedBoyLeaveAnimation = true;
-                const self = this;
 
-                // setTimeout(() => {
                 this.bullyTextBubble.destroy();
 
-                // }, 1);
+                const self = this;
+
+                setTimeout(() => {
+                    this.bulliedChar.flipX = true;
+                    this.bulliedChar.anims.play('walk', true); // plays walking animation
+                    this.bulliedChar.body.setVelocityX(75); // move right with 75 speed
+
+                    setTimeout(() => {
+                        self.char.body.moves = true;
+                    }, 5000);
+
+                }, 1000);
             }
 
+
+
         }
+
 
 
 
@@ -365,11 +381,6 @@ export class BonBonCafeScene extends Phaser.Scene {
 
     }
 
-    private showBulliedMessage() {
-        // Adds the text bubble
-        this.bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
-        this.isInRange = true;
-    }
 
     private canExit() {
         return this.char.body.x < -475;
