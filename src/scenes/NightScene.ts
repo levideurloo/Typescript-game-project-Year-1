@@ -35,6 +35,12 @@ export class NightScene extends Phaser.Scene {
         this.phone = new Phone();
     }
 
+    init(data: any) {
+        this.lifesAmount = data.lifesAmount;
+        this.allLifes = data.allLifes;
+        this.lastLife = data.lastLife;
+    }
+
     preload() {
         const info = (this.game as Game).characterInfo;
 
