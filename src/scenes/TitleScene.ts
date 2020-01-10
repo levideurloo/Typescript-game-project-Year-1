@@ -26,11 +26,10 @@ export class TitleScene extends Phaser.Scene {
 
         this.inputName = document.getElementById("inputName") as HTMLInputElement;
         this.inputGroup = document.getElementById("inputGroup") as HTMLElement;
-
     }
 
     public preload() {
-        this.loadMusic();
+        // this.loadMusic();
     }
 
     public create() {
@@ -53,10 +52,8 @@ export class TitleScene extends Phaser.Scene {
      * Load music function
      */
     private loadMusic() {
-
-        if (!this.music) {
+        if (!this.music)
             this.music = this.sound.add('DOG');
-        }
 
         this.music.play();
     }
@@ -65,9 +62,8 @@ export class TitleScene extends Phaser.Scene {
     * Stop music
     */
     private stopMusic() {
-        if (this.music) {
+        if (this.music)
             this.music.stop();
-        }
     }
 
     /**
@@ -79,7 +75,6 @@ export class TitleScene extends Phaser.Scene {
 
         // Add pointer down listener
         startButton.setInteractive().on('pointerdown', () => {
-
             // Check if a character is selected
             if (!(this.game as Game).characterInfo || !this.inputName.value) {
                 // If not selected add following message to canvas ('Selecteer eerst je poppetje!')
@@ -118,18 +113,13 @@ export class TitleScene extends Phaser.Scene {
         const muteButton = this.add.image(this.game.canvas.width - 60, this.game.canvas.height * 0.9, 'mute-button');
 
         muteButton.setInteractive().on('pointerdown', () => {
-
             if (this.music) {
-
-                if (this.music.isPlaying) {
+                if (this.music.isPlaying)
                     this.stopMusic();
-                } else {
+                else
                     this.loadMusic();
-                }
-
             }
         });
-
     }
 
     /**
@@ -149,12 +139,11 @@ export class TitleScene extends Phaser.Scene {
                 //destroy text
                 const selectedCharacterText = (this.scene as TitleScene).selectedCharacterText;
 
-                if (selectedCharacterText) {
+                if (selectedCharacterText)
                     selectedCharacterText.destroy();
-                }
 
                 //set game property
-                (this.scene.game as Game).characterInfo = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.png` };
+                (this.scene.game as Game).characterInfo = { name: element.name, spreadsheetUri: `./assets/spritesheets/${element.name}.png`, lifes: 2 };
 
                 //set selected text
                 (this.scene as TitleScene).selectedCharacterText = this.scene.add.text(this.x - this.displayWidth / 2 + 20, (this.y + this.displayHeight - 35), 'ˆ').setColor('#baff80').setFontSize(32);
@@ -170,6 +159,4 @@ export class TitleScene extends Phaser.Scene {
         //Add text to canvas
         const addText = this.add.text(this.game.canvas.width / 2 - 60, this.game.canvas.height / 3, text, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', fontSize: '14px', color: 'white' });
     }
-
-
 }

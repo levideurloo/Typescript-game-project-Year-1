@@ -99,7 +99,6 @@ export class BonBonCafeScene extends Phaser.Scene {
         this.backgroundMusic = this.sound.add('music');
         this.backgroundMusic.play();
 
-
         // Create the in-game phone
         const phoneSprite = this.add.sprite(0, this.map.displayHeight + 250, 'phone', 0);
 
@@ -142,7 +141,6 @@ export class BonBonCafeScene extends Phaser.Scene {
             this.nametag = this.add.text(this.char.x - 30, this.char.body.y - 100, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '24px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
-
     }
 
     update() {
@@ -175,7 +173,6 @@ export class BonBonCafeScene extends Phaser.Scene {
             const self = this;
 
             setTimeout(function () {
-
                 self.whatsappNextSprite = self.add.sprite(0, self.map.displayHeight - 40, 'next-btn', 0).setDepth(7).setScale(0.5);
                 self.whatsappNextSprite.setScale(0.5);
                 self.whatsappNextSprite.setDepth(16);
