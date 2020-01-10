@@ -317,7 +317,7 @@ export class GameScene extends Phaser.Scene {
                             nextButton.setDepth(16);
 
                             nextButton.setInteractive().on('pointerdown', () => {
-                                this.scene.start('nightscene', { charX: this.char.x });
+                                this.scene.start('enterbuildingscene', { charX: this.char.x });
                             });
                         } else {
                             text.setColor("red");
