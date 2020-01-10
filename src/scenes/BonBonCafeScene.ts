@@ -40,7 +40,7 @@ export class BonBonCafeScene extends Phaser.Scene {
         // Load character 
         if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        
+
         // Load in the background music
         this.load.audio('music', './assets/audio/NGGUU.mp3');
     }
@@ -276,11 +276,12 @@ export class BonBonCafeScene extends Phaser.Scene {
 
                                 } else {
                                     element.setColor("red");
+                                //     if (this.lifesAmount)
+                                //         this.lifesAmount = this.lifesAmount - 1;
                                 }
                             }
                         });
                     }, self);
-
                 });
 
 
@@ -306,15 +307,14 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (this.whatsappNextSprite) {
             this.whatsappNextSprite.setX(this.char.body.x + 385);
         }
-
-
+        
         // Check if player is in range of bullied charater. Then shows text bubble
         if (this.char.body.x > this.bulliedChar.body.x - 200) {
 
             // Adds the text bubble
-            if (!this.bullyTextBubble) 
+            if (!this.bullyTextBubble)
                 this.bullyTextBubble = this.add.image(this.bulliedChar.body.x + 200, this.bulliedChar.body.y - 25, "bullied-bubble");
-            
+
             this.isInRange = true;
 
             //can play leave animation?
