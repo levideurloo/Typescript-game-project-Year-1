@@ -6,8 +6,10 @@ export class NightScene extends Phaser.Scene {
     private phone: Phone;
     private cursorKeys: any;
     private spaceBar: any;
+    private enterKey: Phaser.Input.Keyboard.Key | undefined;
     private map: any;
-    
+    private arrow: Phaser.GameObjects.Sprite | undefined;
+
     private conversationStarted: boolean = false;
     private notified: boolean = false;
 
@@ -24,7 +26,11 @@ export class NightScene extends Phaser.Scene {
     private answerCorrect: boolean = false;
     private nametag: any;
 
-    constructor() {
+    constructor(
+        private lifesAmount: number,
+        private allLifes: Phaser.GameObjects.Image,
+        private lastLife: Phaser.GameObjects.Image
+    ) {
         super({ key: 'nightscene' });
         this.phone = new Phone();
     }
@@ -43,6 +49,26 @@ export class NightScene extends Phaser.Scene {
 
         //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
+
+        this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
+        this.allLifes.scaleX = .03;
+        this.allLifes.scaleY = .03;
+        this.allLifes.setDepth(5);
+
+        this.lastLife = this.add.image(0, 25, 'lifes-1', undefined);
+        this.lastLife.scaleX = .03;
+        this.lastLife.scaleY = .03;
+        this.lastLife.setDepth(5);
+
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
 
         // Add map to the scene
         this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map-night")
@@ -77,6 +103,14 @@ export class NightScene extends Phaser.Scene {
             repeat: -1,
             frameRate: 12,
             frames: this.anims.generateFrameNumbers(characterName, { start: 0, end: 8 })
+        });
+
+        //Animate Floating Arrow
+        this.anims.create({
+            key: 'point',
+            repeat: -1,
+            frameRate: 30,
+            frames: this.anims.generateFrameNumbers('arrow', { start: 0, end: 19 })
         });
 
         // Create the in-game phone
@@ -117,11 +151,18 @@ export class NightScene extends Phaser.Scene {
             this.nametag = this.add.text(this.char.x - 18, this.char.body.y - 50, chosenName, { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
             this.nametag.setDepth(5);
         }
+
+        this.arrow = this.add.sprite(1490, 370, 'arrow', 0);
+        this.arrow.anims.play('point', true);
+        this.arrow.scaleY = 3.5;
+        this.arrow.scaleX = 3.5;
+        this.arrow.angle = 90;
     }
 
     update() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
         if (this.cursorKeys.right.isDown) {
             this.char.body.setVelocityX(75); // move right with 75 speed
@@ -229,6 +270,30 @@ export class NightScene extends Phaser.Scene {
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+        if (this.lifesAmount < 1) {
+            this.lastLife.visible = false;
+            this.scene.start('main');
+        }
+
+        // Positionate lifes on canvas
+        if (this.char.body.x >= -321) {
+            this.allLifes.setX(this.char.body.x - 409);
+            this.lastLife.setX(this.char.body.x - 409);
+        }
+        else {
+            this.allLifes.setX(-731);
+            this.lastLife.setX(-731);
+        }
+
         const phoneSprite = this.phone.getSprite();
 
         if (phoneSprite)
@@ -242,6 +307,11 @@ export class NightScene extends Phaser.Scene {
 
         if (this.notified && this.answerCorrect == false)
             this.walkingGirl();
+
+        if ((this.char.body.x > 1470) && (this.char.body.x < 1490)) {
+            console.log(' test');
+            this.finishGame();
+        }
     }
 
     /**
@@ -374,5 +444,11 @@ export class NightScene extends Phaser.Scene {
             this.snapchatGirl.visible = false;
         }, 11000);
     }
+
+    private finishGame() {
+        if (this.arrow && this.enterKey && Phaser.Input.Keyboard.JustDown(this.enterKey))
+            this.scene.start('endscene');
+    }
 }
 
+ 

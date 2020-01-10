@@ -16,9 +16,6 @@ export class GameScene extends Phaser.Scene {
 
     private nametag: any;
     // private lifesText: Phaser.GameObjects.Text | any;
-    private lifesAmount: number = 0;
-    private allLifes: Phaser.GameObjects.Image | any;
-    private lastLife: Phaser.GameObjects.Image | any;
 
     private answerCorrect: boolean = false;
     private conversationStarted: boolean = false;
@@ -29,7 +26,11 @@ export class GameScene extends Phaser.Scene {
     private hasReceivedNotificationBullies: boolean = false;
 
 
-    constructor() {
+    constructor(
+        private lifesAmount: number,
+        private allLifes: Phaser.GameObjects.Image,
+        private lastLife: Phaser.GameObjects.Image
+        ) {
         super({ key: 'gamescene' });
         this.phone = new Phone();
     }
@@ -58,14 +59,6 @@ export class GameScene extends Phaser.Scene {
 
         //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
-
-        // Get Lifes
-        // const lifes = info ? info.lifes : '2';
-
-        // this.lifesText = this.add.text(0, 15, "Levens: ", { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif', backgroundColor: 'rgba(0, 0, 0, 0.39)', fontWeight: 'bold', fontSize: '16px', color: 'white', wordWrap: { width: 170 } });
-        // this.lifesText.setDepth(5);
-        // this.lifesText.setDepth(5);
-
 
         this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
         this.allLifes.scaleX = .03;
@@ -182,7 +175,7 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
-        
+
         if (this.lifesAmount > 1) {
             this.lastLife.visible = false;
             this.allLifes.visible = true;
@@ -324,15 +317,13 @@ export class GameScene extends Phaser.Scene {
                             nextButton.setDepth(16);
 
                             nextButton.setInteractive().on('pointerdown', () => {
-                                this.scene.start('enterbuildingscene', { charX: this.char.x });
+                                this.scene.start('nightscene', { charX: this.char.x });
                             });
                         } else {
                             text.setColor("red");
 
                             if (this.lifesAmount)
                                 this.lifesAmount = this.lifesAmount - 1;
-
-                            this.checkLives();
                         }
                     }
                 });
@@ -461,19 +452,5 @@ export class GameScene extends Phaser.Scene {
         setTimeout(() => {
             this.bullyTwo.body.setVelocityY(0);
         }, 900);
-    }
-
-    private checkLives() {
-        // if (this.lifesAmount && this.lifesAmount === 2)
-        //     this.lifes = new Phaser.GameObjects.Image(this, 0, 15, 'lifes-all', undefined);
-
-        // if (this.lifesAmount && this.lifesAmount === 1)
-        //     this.lifes = new Phaser.GameObjects.Image(this, 0, 15, 'lifes-1', undefined);
-
-        // this.lifes.scaleX = .03;
-        // this.lifes.scaleY = .03;
-        // this.lifes.setDepth(5);
-        // // else
-        // //     this.scene.start('helpscene');
     }
 }
