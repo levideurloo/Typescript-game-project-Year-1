@@ -33,7 +33,11 @@ export class EnterBuildingScene extends Phaser.Scene {
     private nametag: any;
     private textbubble: any;
 
-    constructor() {
+    constructor(
+        private lifesAmount: number,
+        private allLifes: Phaser.GameObjects.Image,
+        private lastLife: Phaser.GameObjects.Image
+    ) {
         super({ key: 'enterbuildingscene' });
         this.phone = new Phone();
     }
@@ -46,9 +50,8 @@ export class EnterBuildingScene extends Phaser.Scene {
         const info = (this.game as Game).characterInfo;
 
         //load character 
-        if (info) {
+        if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        }
 
         this.phone.addAnswer('Sla de pestkop in elkaar');
         this.phone.addAnswer('Zoek hulp bij een leraar');
@@ -63,6 +66,8 @@ export class EnterBuildingScene extends Phaser.Scene {
         //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
 
+        this.createLifes();
+        
         // Add map to the scene
         this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map")
         this.map.displayWidth = 2500;
@@ -281,6 +286,8 @@ export class EnterBuildingScene extends Phaser.Scene {
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
+        this.updateLifes();
+
         const phoneSprite = this.phone.getSprite();
 
         if (phoneSprite) {
@@ -364,7 +371,55 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     private enterBuilding() {
         if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect)
-            this.scene.start('bonboncafescene');
+            this.scene.start('bonboncafescene', {lifesAmount: this.lifesAmount });
+    }
+
+    private createLifes() {
+        this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
+        this.allLifes.scaleX = .03;
+        this.allLifes.scaleY = .03;
+        this.allLifes.setDepth(5);
+
+        this.lastLife = this.add.image(0, 25, 'lifes-1', undefined);
+        this.lastLife.scaleX = .03;
+        this.lastLife.scaleY = .03;
+        this.lastLife.setDepth(5);
+
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+    }
+
+    private updateLifes() {
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+        if (this.lifesAmount < 1) {
+            this.lastLife.visible = false;
+            this.scene.start('GameOverScene');
+        }
+
+        // Positionate lifes on canvas
+        if (this.char.body.x >= -321) {
+            this.allLifes.setX(this.char.body.x - 409);
+            this.lastLife.setX(this.char.body.x - 409);
+        }
+        else {
+            this.allLifes.setX(-731);
+            this.lastLife.setX(-731);
+        }
     }
 }
 

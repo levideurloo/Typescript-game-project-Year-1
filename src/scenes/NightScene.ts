@@ -35,6 +35,10 @@ export class NightScene extends Phaser.Scene {
         this.phone = new Phone();
     }
 
+    init(data: any) {
+        this.lifesAmount = data.lifesAmount;
+    }
+
     preload() {
         const info = (this.game as Game).characterInfo;
 
@@ -50,25 +54,7 @@ export class NightScene extends Phaser.Scene {
         //get character name, by default boy if none is selected
         const characterName = info ? info.name : 'boy';
 
-        this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
-        this.allLifes.scaleX = .03;
-        this.allLifes.scaleY = .03;
-        this.allLifes.setDepth(5);
-
-        this.lastLife = this.add.image(0, 25, 'lifes-1', undefined);
-        this.lastLife.scaleX = .03;
-        this.lastLife.scaleY = .03;
-        this.lastLife.setDepth(5);
-
-        if (this.lifesAmount > 1) {
-            this.lastLife.visible = false;
-            this.allLifes.visible = true;
-        }
-
-        if (this.lifesAmount == 1) {
-            this.allLifes.visible = false;
-            this.lastLife.visible = true;
-        }
+        this.createLifes();
 
         // Add map to the scene
         this.map = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, "map-night")
@@ -257,8 +243,11 @@ export class NightScene extends Phaser.Scene {
                                 self.sextingBubble.destroy();
                                 self.thankPlayer();
                             });
-                        } else
+                        } else {
                             element.setColor("red");
+                            if (self.lifesAmount)
+                                self.lifesAmount = self.lifesAmount - 1;
+                        }
                     }
                 });
             }, self);
@@ -270,29 +259,8 @@ export class NightScene extends Phaser.Scene {
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
-        if (this.lifesAmount > 1) {
-            this.lastLife.visible = false;
-            this.allLifes.visible = true;
-        }
+        this.updateLifes();
 
-        if (this.lifesAmount == 1) {
-            this.allLifes.visible = false;
-            this.lastLife.visible = true;
-        }
-        if (this.lifesAmount < 1) {
-            this.lastLife.visible = false;
-            this.scene.start('main');
-        }
-
-        // Positionate lifes on canvas
-        if (this.char.body.x >= -321) {
-            this.allLifes.setX(this.char.body.x - 409);
-            this.lastLife.setX(this.char.body.x - 409);
-        }
-        else {
-            this.allLifes.setX(-731);
-            this.lastLife.setX(-731);
-        }
 
         const phoneSprite = this.phone.getSprite();
 
@@ -308,10 +276,9 @@ export class NightScene extends Phaser.Scene {
         if (this.notified && this.answerCorrect == false)
             this.walkingGirl();
 
-        if ((this.char.body.x > 1470) && (this.char.body.x < 1490)) {
-            console.log(' test');
+        if ((this.char.body.x > 1470) && (this.char.body.x < 1490))
             this.finishGame();
-        }
+        
     }
 
     /**
@@ -447,7 +414,55 @@ export class NightScene extends Phaser.Scene {
 
     private finishGame() {
         if (this.arrow && this.enterKey && Phaser.Input.Keyboard.JustDown(this.enterKey))
-            this.scene.start('endscene');
+            this.scene.start('VictoryScene');
+    }
+
+    private createLifes() {
+        this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
+        this.allLifes.scaleX = .03;
+        this.allLifes.scaleY = .03;
+        this.allLifes.setDepth(5);
+
+        this.lastLife = this.add.image(0, 25, 'lifes-1', undefined);
+        this.lastLife.scaleX = .03;
+        this.lastLife.scaleY = .03;
+        this.lastLife.setDepth(5);
+
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+    }
+
+    private updateLifes() {
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+        if (this.lifesAmount < 1) {
+            this.lastLife.visible = false;
+            this.scene.start('GameOverScene');
+        }
+
+        // Positionate lifes on canvas
+        if (this.char.body.x >= -321) {
+            this.allLifes.setX(this.char.body.x - 409);
+            this.lastLife.setX(this.char.body.x - 409);
+        }
+        else {
+            this.allLifes.setX(-731);
+            this.lastLife.setX(-731);
+        }
     }
 }
 

@@ -28,9 +28,17 @@ export class BonBonCafeScene extends Phaser.Scene {
 
     private hasPlayedBulliedBoyLeaveAnimation: boolean = false;
 
-    constructor() {
+    constructor(
+        private lifesAmount: number,
+        private allLifes: Phaser.GameObjects.Image,
+        private lastLife: Phaser.GameObjects.Image
+    ) {
         super({ key: 'bonboncafescene' });
         this.phone = new Phone();
+    }
+
+    init(data: any) {
+        this.lifesAmount = data.lifesAmount;
     }
 
     preload() {
@@ -51,6 +59,8 @@ export class BonBonCafeScene extends Phaser.Scene {
 
         // Get character name, by default 'boy' if none is selected
         const characterName = info ? info.name : 'boy';
+
+        this.createLifes();
 
         // Add map to the scene
         this.map = this.add.image(100, this.game.canvas.height / 2, "cafe")
@@ -275,6 +285,7 @@ export class BonBonCafeScene extends Phaser.Scene {
                                     });
 
                                 } else {
+                                    self.changeLifes();
                                     element.setColor("red");
                                 }
                             }
@@ -286,10 +297,12 @@ export class BonBonCafeScene extends Phaser.Scene {
 
             }, 10);
 
+
+
             this.whatsappSprite.displayHeight = 350;
             this.whatsappSprite.displayWidth = 190;
         }
-
+        this.updateLifes();
         this.cameras.main.setBounds(-770, 0, this.map.displayWidth + 100, this.map.displayHeight);
         this.cameras.main.startFollow(this.char);
 
@@ -306,7 +319,6 @@ export class BonBonCafeScene extends Phaser.Scene {
         if (this.whatsappNextSprite) {
             this.whatsappNextSprite.setX(this.char.body.x + 385);
         }
-
 
         // Check if player is in range of bullied charater. Then shows text bubble
         if (this.char.body.x > this.bulliedChar.body.x - 200) {
@@ -353,7 +365,62 @@ export class BonBonCafeScene extends Phaser.Scene {
     private leaveBuilding() {
         if (this.answerCorrect && this.canExit() && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
             this.backgroundMusic.stop();
-            this.scene.start('nightscene');
+            this.scene.start('nightscene', { lifesAmount: this.lifesAmount });
         }
+    }
+
+    private createLifes() {
+        this.allLifes = this.add.image(0, 25, 'lifes-all', undefined);
+        this.allLifes.scaleX = .03;
+        this.allLifes.scaleY = .03;
+        this.allLifes.setDepth(5);
+
+        this.lastLife = this.add.image(0, 25, 'lifes-1', undefined);
+        this.lastLife.scaleX = .03;
+        this.lastLife.scaleY = .03;
+        this.lastLife.setDepth(5);
+
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+    }
+
+    private updateLifes() {
+        if (this.lifesAmount > 1) {
+            this.lastLife.visible = false;
+            this.allLifes.visible = true;
+        }
+
+        if (this.lifesAmount == 1) {
+            this.allLifes.visible = false;
+            this.lastLife.visible = true;
+        }
+        if (this.lifesAmount < 1) {
+            this.lastLife.visible = false;
+            this.scene.start('GameOverScene');
+        }
+
+        // Positionate lifes on canvas
+        if ((this.char.body.x >= -300) && (this.char.body.x <= +300)) {
+            this.allLifes.setX(this.char.body.x - 309);
+            this.lastLife.setX(this.char.body.x - 309);
+        }
+        else {
+            this.allLifes.setX(-607);
+            this.lastLife.setX(-607);
+        }
+    }
+
+    private changeLifes() {
+        if (this.lifesAmount)
+            this.lifesAmount = this.lifesAmount - 1;
+
+        this.updateLifes();
     }
 }
