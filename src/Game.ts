@@ -1,4 +1,3 @@
-
 import * as Phaser from "phaser";
 import { Preloader } from './scenes/Preloader';
 import { GameScene } from './scenes/GameScene';
@@ -7,7 +6,9 @@ import { TitleScene } from './scenes/TitleScene';
 import { EnterBuildingScene } from './scenes/EnterBuildingScene';
 import { HelpScene } from './scenes/HelpScene';
 import { BonBonCafeScene } from "./scenes/BonBonCafeScene";
-import { NightScene } from './scenes/NightScene';
+import { NightScene } from './scenes/NightScene'; 
+import { GameOverScene } from './scenes/GameOverScene';
+import { VictoryScene } from './scenes/VictoryScene';
 
 const config: GameConfig = {
     type: Phaser.AUTO,
@@ -21,13 +22,15 @@ const config: GameConfig = {
         HelpScene,
         EnterBuildingScene,
         BonBonCafeScene,
-        NightScene
+        NightScene,
+        GameOverScene,
+        VictoryScene
     ],
     physics: {
         default: 'arcade',
         arcade: {
         },
-            debug: false,
+        debug: false,
     }
 };
 

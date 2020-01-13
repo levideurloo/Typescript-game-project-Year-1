@@ -51,9 +51,8 @@ export class EnterBuildingScene extends Phaser.Scene {
         const info = (this.game as Game).characterInfo;
 
         //load character 
-        if (info) {
+        if (info)
             this.load.spritesheet(info.name, info.spreadsheetUri, { frameWidth: 64, frameHeight: 64 });
-        }
 
         this.phone.addAnswer('Sla de pestkop in elkaar');
         this.phone.addAnswer('Zoek hulp bij een leraar');
@@ -375,7 +374,7 @@ export class EnterBuildingScene extends Phaser.Scene {
 
     private enterBuilding() {
         if (this.canEnter == true && Phaser.Input.Keyboard.JustDown(this.enterKey) && this.answerCorrect)
-            this.scene.start('bonboncafescene');
+            this.scene.start('bonboncafescene', {lifesAmount: this.lifesAmount });
     }
 
     private createLifes() {
@@ -412,7 +411,7 @@ export class EnterBuildingScene extends Phaser.Scene {
         }
         if (this.lifesAmount < 1) {
             this.lastLife.visible = false;
-            this.scene.start('gameoverscene');
+            this.scene.start('GameOverScene');
         }
 
         // Positionate lifes on canvas

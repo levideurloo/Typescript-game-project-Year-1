@@ -447,7 +447,7 @@ export class GameScene extends Phaser.Scene {
         }
         if (this.lifesAmount < 1) {
             this.lastLife.visible = false;
-            this.scene.start('gameoverscene');
+            this.scene.start('GameOverScene');
         }
 
         // Positionate lifes on canvas
